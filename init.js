@@ -5,5 +5,5 @@
             return a + b;
         } 
     }
-    window.dispatchEvent(new Event('utils.loaded', window.utils));
+    window.dispatchEvent(new Event('utils.loaded', { detail: window.utils} ));
 })()
