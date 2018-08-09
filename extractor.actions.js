@@ -1,7 +1,7 @@
 async function (a) {
   /* ACTION 1 - JS Action that loads external utils lib */
   (function () {
-    var libURL = 'https://cdn.rawgit.com/TDCM-io/iio/0e63a7fcfc0fe3b1fc10d72d879dd402690bb912/init.js', // Add valid URL to latest utils lib
+    var libURL = 'https://cdn.rawgit.com/TDCM-io/iio/6011fe8a09c5c08c7a0b73f288f8ab62cebdc490/utils.js', // Add valid URL to latest utils lib
       utilsEl = document.createElement('script'),
       scriptEl = document.querySelector("head script");
 
