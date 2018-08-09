@@ -1,3 +1,7 @@
+Add interacttions below AFTER initial page load
+
+
+
 {
   "constructor": "WaitAction",
   "timeout": 5000
@@ -26,11 +30,16 @@
   "constructor": "WaitAction",
   "timeout": 5000
 },
+
+
+Add content of the callback below every time  you would like to make use of utils lib in new JS Action
+
+
 {
   "constructor": "FunctionAction",
   "args": [
     ""
   ],
-  "callback": "async function(a) {\n  window.utils.testFn = null;\n  (function () {\n    if (this.memory.utils) {\n      var localUtils = JSON.parse(this.memory.utils), utilsKeys = Object.keys(localUtils);\n      for (var i = 0; i < utilsKeys.length; i++) {\n          var key = utilsKeys[i], value = localUtils[key];\n          if (typeof value === 'string' && value.indexOf('function') > -1) {\n              eval('localUtils.' +key+ '='+ value); // Eval strings with functions into functions \n          }\n      }\n      window.utils = localUtils;\n    } else { console.log('Utils lib not loaded in memory.'); this.return(this.createData({ status: 'FAILURE', message: 'Utils lib not loaded in memory.' })) }\n  }.bind(this))();\n\n  console.log(window.utils.testFn(4,6));\n}",
+  "callback": "async function(a) {\n  (function () {\n    if (this.memory.utils) {\n      var localUtils = JSON.parse(this.memory.utils), utilsKeys = Object.keys(localUtils);\n      for (var i = 0; i < utilsKeys.length; i++) {\n          var key = utilsKeys[i], value = localUtils[key];\n          if (typeof value === 'string' && value.indexOf('function') > -1) {\n              eval('localUtils.' +key+ '='+ value); // Eval strings with functions into functions \n          }\n      }\n      window.utils = localUtils;\n    } else { console.log('Utils lib not loaded in memory.'); this.return(this.createData({ status: 'FAILURE', message: 'Utils lib not loaded in memory.' })) }\n  }.bind(this))();\n\n}",
   "timeout": 10000
 }
