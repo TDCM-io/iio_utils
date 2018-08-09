@@ -1,0 +1,36 @@
+{
+  "constructor": "WaitAction",
+  "timeout": 5000
+},
+{
+  "constructor": "FunctionAction",
+  "args": [
+    ""
+  ],
+  "callback": "async function (a) {\n    var libURL = 'https://cdn.rawgit.com/TDCM-io/iio/0e63a7fcfc0fe3b1fc10d72d879dd402690bb912/init.js',\n        utilsEl = document.createElement('script'),\n        scriptEl = document.querySelector(\"head script\");\n    \n    utilsEl.type = \"application/javascript\";\n    utilsEl.src = libURL;\n    scriptEl.parentNode.insertBefore(utilsEl, scriptEl);\n}",
+  "timeout": 10000
+},
+{
+  "constructor": "WaitAction",
+  "timeout": 5000
+},
+{
+  "constructor": "FunctionAction",
+  "args": [
+    ""
+  ],
+  "callback": "async function(a) {\n  (function () {\n    if (window.utils) {\n      this.memory.utils = JSON.stringify(window.utils, function(key, val) {\n        return (typeof val === 'function') ? (val+'') : val;\n      });\n    } else { console.log('Utils lib not loaded in window.'); this.return(this.createData({ status: 'FAILURE', message: 'Utils lib not loaded in window.' })) }\n  }.bind(this))()\n}",
+  "timeout": 10000
+},
+{
+  "constructor": "WaitAction",
+  "timeout": 5000
+},
+{
+  "constructor": "FunctionAction",
+  "args": [
+    ""
+  ],
+  "callback": "async function(a) {\n  window.utils.testFn = null;\n  (function () {\n    if (this.memory.utils) {\n      var localUtils = JSON.parse(this.memory.utils), utilsKeys = Object.keys(localUtils);\n      for (var i = 0; i < utilsKeys.length; i++) {\n          var key = utilsKeys[i], value = localUtils[key];\n          if (typeof value === 'string' && value.indexOf('function') > -1) {\n              eval('localUtils.' +key+ '='+ value); // Eval strings with functions into functions \n          }\n      }\n      window.utils = localUtils;\n    } else { console.log('Utils lib not loaded in memory.'); this.return(this.createData({ status: 'FAILURE', message: 'Utils lib not loaded in memory.' })) }\n  }.bind(this))();\n\n  console.log(window.utils.testFn(4,6));\n}",
+  "timeout": 10000
+}
