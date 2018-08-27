@@ -27,7 +27,9 @@
         ADDRESS_MISSING: { status: "FAILED", message: "Provided address doesn't exist in the list of shipping addresses." },
         BUY_ACTION_FAILED: { status: "FAILED", message: "Failed to finalize the order." },
         REQUIRES_CREDIT_CARD_RE: { status: "FAILED", message: "Credit card details are required to be re-entered during the final checkout steps. We cannot proceed at this time." },
-        ACTION_NOT_SUPPORTED: { status: "FAILED", message: "This action is not compatible with this source." }
+        ACTION_NOT_SUPPORTED: { status: "FAILED", message: "This action is not compatible with this source." },
+        INVALID_TIMEFRAME_QUANTITY: { status: "FAILED", message: "Invalid number of timeframe inputs." },
+        INVALID_TIMEFRAME: { status: "FAILED", message: "Invalid timeframe." },
     }
 
     window.__Utils = class Utils {
@@ -58,10 +60,25 @@
                 console.log(JSON.stringify(returnData)); 
                 this.return(this.createData(returnData));
             }.bind(_jsActionContext);
-
+            _endEx = this.endEx;
+            
+            this.checkTimeframes = function(timeframes) {
+              if (timeframes.length != 2) {
+                this.return(this.createData(_endEx(AUTH_SUCCESS,
+                                            INVALID_TIMEFRAME_QUANTITY, null)));
+              } else if (!/^\d{10}$/.test(timeframes[0]) || !/^\d{10}$/.test(timeframes[1])) {
+                this.return(this.createData(_endEx(AUTH_SUCCESS,
+                                            INVALID_TIMEFRAME, null)));
+              } else if (timeframes[1] > parseInt(new Date().getTime()/1000)) {
+                this.return(this.createData(_endEx(AUTH_SUCCESS,
+                                            INVALID_TIMEFRAME, null)));
+              }
+            }.bind(_jsActionContext);
+            
             if (_jsActionContext.memory && _jsActionContext.memory.returnData) {
                 _jsActionContext.return(_jsActionContext.createData(_jsActionContext.memory.returnData));
             }
         }
+        
     }
 })()
