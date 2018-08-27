@@ -63,6 +63,7 @@
             _endEx = this.endEx;
             
             this.checkTimeframes = function(timeframes) {
+              let returnData;
               if (timeframes.length != 2) {
                 this.return(this.createData(_endEx(_status.AUTH_SUCCESS,
                                             _status.INVALID_TIMEFRAME_QUANTITY, null)));
