@@ -1,5 +1,6 @@
 (function () {
     let _jsActionContext;
+    let _endEx;
     let _status = {
         AUTH_SUCCESS: { auth_status: "SUCESS", auth_message: "" },
         AUTH_2FA: { auth_status: "2FA", auth_message: "" },
@@ -55,9 +56,6 @@
                         auth_message: authFailedMsg
                     };
                 }
-                // this.memory.returnData = returnData;
-                // console.log(JSON.stringify(returnData)); 
-                // this.return(this.createData(returnData));
                 this.memory.returnData = this.createData(returnData);
                 return this.return(this.memory.returnData);
             }.bind(_jsActionContext);
