@@ -64,14 +64,14 @@
             
             this.checkTimeframes = function(timeframes) {
               if (timeframes.length != 2) {
-                this.return(this.createData(_endEx(AUTH_SUCCESS,
-                                            INVALID_TIMEFRAME_QUANTITY, null)));
+                this.return(this.createData(_endEx(_status.AUTH_SUCCESS,
+                                            _status.INVALID_TIMEFRAME_QUANTITY, null)));
               } else if (!/^\d{10}$/.test(timeframes[0]) || !/^\d{10}$/.test(timeframes[1])) {
-                this.return(this.createData(_endEx(AUTH_SUCCESS,
-                                            INVALID_TIMEFRAME, null)));
+                this.return(this.createData(_endEx(_status.AUTH_SUCCESS,
+                                            _status.INVALID_TIMEFRAME, null)));
               } else if (timeframes[1] > parseInt(new Date().getTime()/1000)) {
-                this.return(this.createData(_endEx(AUTH_SUCCESS,
-                                            INVALID_TIMEFRAME, null)));
+                this.return(this.createData(_endEx(_status.AUTH_SUCCESS,
+                                            _status.INVALID_TIMEFRAME, null)));
               }
             }.bind(_jsActionContext);
         }
