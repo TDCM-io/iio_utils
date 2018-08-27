@@ -1,5 +1,6 @@
 {
   "name": "tdcmioiio",
   "version": "1.0.0",
-  "main": "server.js"
+  "main": "server.js",
+  "start": "node server.js"
 }
