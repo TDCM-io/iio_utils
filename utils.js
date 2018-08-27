@@ -1,9 +1,9 @@
 (function () {
     let _jsActionContext;
     let _status = {
-        AUTH_SUCCESS: { auth_status: "SUCESS", auth_message: "" },               
-        AUTH_2FA: { auth_status: "2FA", auth_message: "" },               
-        AUTH_UNKNOWN: { auth_status: "UNKNOWN", auth_message: "" },               
+        AUTH_SUCCESS: { auth_status: "SUCESS", auth_message: "" },
+        AUTH_2FA: { auth_status: "2FA", auth_message: "" },
+        AUTH_UNKNOWN: { auth_status: "UNKNOWN", auth_message: "" },
         ACTION_INCOMPATIBLE_WITH_SOURCE: { status: "FAILED", message: "This action is incompatible with the given source." },
         SITE_ERROR: { status: "FAILED", message: "A site error occurred while trying to perform this action." },
         USER_LOGGED_OUT: { status: "FAILED", message: "User is not logged in, for an unknown reason." },
@@ -14,7 +14,7 @@
         PRODUCT_OUT_OF_STOCK: { status: "FAILED", message: "This product is not available at this time." },
         PRODUCT_REQUIRES_ADDITIONAL_DETAILS: { status: "FAILED", message: "Product requires additional details to add to cart." },
         QUANTITY_EXCEEDS_AVAILABLE_STOCK: { status: "FAILED", message: "The quantity provided exceeded the actual quantity in stock." },
-        QUANTITY_EXCEEDS_MAX_ALLOWED: { status: "FAILED", message: "The quantity provided would exceed the maximum  quantity allowed in cart." },
+        QUANTITY_EXCEEDS_MAX_ALLOWED: { status: "FAILED", message: "The quantity provided would exceed the maximum  quantity allowed in cart." },
         LOGIN_DELIVERY_ZIP_MISMATCH: { status: "FAILED", message: "Zip provided during login is different than the zip used in shipping address. This is not allowed." },
         MAX_SHIPPING_COST_EXCEEDED: { status: "FAILED", message: "Actual shipping cost exceeded the maximum specified." },
         MAX_SHIPPING_DAYS_EXCEEDED: { status: "FAILED", message: "Actual shipping days exceeded the maximum specified." },
@@ -31,21 +31,21 @@
     }
 
     window.__Utils = class Utils {
-        constructor(jsActionContext) {   
-            _jsActionContext = jsActionContext;               
-            this.endEx = function(authObjId, statusObjId, authFailedMsg) {
+        constructor(jsActionContext) {
+            _jsActionContext = jsActionContext;
+            this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
-    
-                if (!authFailedMsg) {         
+
+                if (!authFailedMsg) {
                     let authObj = _status[authObjId] || {};
                     let statusObj = _status[statusObjId] || {};
-    
+
                     if ((!authObjId || typeof authObjId != "string") && (!statusObjId || typeof statusObjId != "string")) {
-                        return console.log("No authObjId and no statusObjId provided.");                   
+                        return console.log("No authObjId and no statusObjId provided.");
                     } else if (!_status[authObjId] && !_status[authObjId]) {
                         return console.log("authObjId and statusObjId does not math any known status.");
                     }
-                    
+
                     returnData = Object.assign(authObj, statusObj)
                 } else {
                     returnData = {
@@ -53,15 +53,10 @@
                         auth_message: authFailedMsg
                     };
                 }
-    
-                this.memory.returnData = returnData;
-                console.log(JSON.stringify(returnData)); 
-                this.return(this.createData(returnData));
-            }.bind(_jsActionContext);
 
-            if (_jsActionContext.memory && _jsActionContext.memory.returnData) {
-                _jsActionContext.return(_jsActionContext.createData(_jsActionContext.memory.returnData));
-            }
+                this.memory.returnData = this.createData(returnData);
+                return this.return(this.memory.returnData);
+            }.bind(_jsActionContext);
         }
     }
 })()
