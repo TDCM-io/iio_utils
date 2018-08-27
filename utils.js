@@ -65,9 +65,9 @@
             this.checkTimeframes = function(timeframes) {
               let returnData;
               if (timeframes.length != 2) {
-                return _endEx(_status.AUTH_SUCCESS, _status.INVALID_TIMEFRAME_QUANTITY);
+                return _endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME_QUANTITY');
               } else if (!/^\d{10}$/.test(timeframes[0]) || !/^\d{10}$/.test(timeframes[1]) || (timeframes[1] > parseInt(new Date().getTime()/1000))) {
-                return _endEx(_status.AUTH_SUCCESS, _status.INVALID_TIMEFRAME);
+                return _endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME');
               }
               return true;
             }.bind(_jsActionContext);
