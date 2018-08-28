@@ -1,5 +1,5 @@
 (function () {
-    let $ = $.noConflict();
+    let _$ = $.noConflict();
     let _jsActionContext;
     let _endEx;
     let _status = {
@@ -37,7 +37,7 @@
     window.__Utils = class Utils {
         constructor(jsActionContext) {
             _jsActionContext = jsActionContext;
-            this.$ = $;
+            this.$ = _$;
             this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
 

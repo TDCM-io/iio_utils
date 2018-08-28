@@ -2,5 +2,11 @@
   "name": "tdcmioiio",
   "version": "1.0.0",
   "main": "server.js",
-  "start": "node server.js"
+  "start": "node server.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
 }
