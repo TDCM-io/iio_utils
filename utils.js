@@ -44,7 +44,7 @@
                     }.bind(_jsActionContext);
                 }
             }
-
+            this.loaded = true;
             this.$ = (window.jQuery || _noConflictHandler).noConflict();
             this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
@@ -69,7 +69,7 @@
                 this.memory.returnData = this.createData(returnData);
                 return this.return(this.memory.returnData);
             }.bind(_jsActionContext);
-
+            
             _endEx = this.endEx;
 
             this.checkTimeframes = function (timeframes) {

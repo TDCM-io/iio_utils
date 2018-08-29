@@ -1,5 +1,7 @@
 before_script:
   - npm install -g gulp-cli
+  - npm install -g mocha
+  - npm install gulp-mocha
 script: gulp
 deploy:
   provider: heroku
