@@ -1,14 +1,6 @@
 (function () {
     let _jsActionContext,
         _endEx,
-        _noConflictHandler = {
-            noConflict: function () {
-                return function () {
-                    return (_jsActionContext || window).console.log("jQuery lib not loaded.");
-                }
-            }
-        },
-        _$ = (window.jQuery || _noConflictHandler).noConflict(),
         _status = {
             AUTH_SUCCESS: { auth_status: "SUCESS", auth_message: "" },
             AUTH_2FA: { auth_status: "2FA", auth_message: "" },
@@ -44,7 +36,14 @@
     window.__Utils = class Utils {
         constructor(jsActionContext) {
             _jsActionContext = jsActionContext;
-            this.$ = _$;
+            let _noConflictHandler = {
+                noConflict: function () {
+                    return function () {
+                        return console.log("jQuery lib not loaded.");
+                    }.bind(_jsActionContext);
+                }
+            },
+            this.$ = (window.jQuery || _noConflictHandler).noConflict(),
             this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
 
