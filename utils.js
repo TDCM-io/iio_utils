@@ -24,6 +24,7 @@
             CVV_REQUIRED: { status: "FAILED", message: "CVV code was not provided in the input." },
             CVV_INCORRECT: { status: "FAILED", message: "Provided CVV code is incorrect." },
             CART_EMPTY: { status: "FAILED", message: "Shopping cart contains no items." },
+            CART_NOT_EMPTY: { status: "FAILED", message: "Failed to empty shopping cart." },
             PRODUCT_NOT_AVAILABLE_FOR_SHIPPING: { status: "FAILED", message: "Products in cart are not available for shipping." },
             ADDRESS_MISSING: { status: "FAILED", message: "Provided address doesn't exist in the list of shipping addresses." },
             BUY_ACTION_FAILED: { status: "FAILED", message: "Failed to finalize the order." },
