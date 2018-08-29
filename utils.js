@@ -42,8 +42,9 @@
                         return console.log("jQuery lib not loaded.");
                     }.bind(_jsActionContext);
                 }
-            },
-            this.$ = (window.jQuery || _noConflictHandler).noConflict(),
+            }
+
+            this.$ = (window.jQuery || _noConflictHandler).noConflict();
             this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
 
