@@ -8,3 +8,5 @@ deploy:
   api_key: 99a4dc36-4fb7-4b3d-bb67-87b2842432fe
   app:
     master: tdcmioiio
+notifications:
+  slack: tdcmio:gCl5pCp8Sy612Io5eSXQND7r
