@@ -2,7 +2,7 @@
     let _jsActionContext,
         _endEx,
         _status = {
-            AUTH_SUCCESS: { auth_status: "SUCESS", auth_message: "" },
+            AUTH_SUCCESS: { auth_status: "SUCCESS", auth_message: "" },
             AUTH_2FA: { auth_status: "2FA", auth_message: "" },
             AUTH_UNKNOWN: { auth_status: "UNKNOWN", auth_message: "" },
             ACTION_INCOMPATIBLE_WITH_SOURCE: { status: "FAILED", message: "This action is incompatible with the given source." },
@@ -10,12 +10,12 @@
             USER_LOGGED_OUT: { status: "FAILED", message: "User is not logged in, for an unknown reason." },
             ORDER_NUMBER_NOT_EXIST: { status: "FAILED", message: "Order with provided number does not exist." },
             INVALID_URL: { status: "FAILED", message: "URL is invalid." },
-            INVALID_QUANTITY_PROVIDED: { status: "FAILED", message: "Incorrect quantity Value." },
+            INVALID_QUANTITY_PROVIDED: { status: "FAILED", message: "Incorrect quantity value." },
             PRODUCT_DOES_NOT_EXIST: { status: "FAILED", message: "Product not found." },
             PRODUCT_OUT_OF_STOCK: { status: "FAILED", message: "This product is not available at this time." },
             PRODUCT_REQUIRES_ADDITIONAL_DETAILS: { status: "FAILED", message: "Product requires additional details to add to cart." },
             QUANTITY_EXCEEDS_AVAILABLE_STOCK: { status: "FAILED", message: "The quantity provided exceeded the actual quantity in stock." },
-            QUANTITY_EXCEEDS_MAX_ALLOWED: { status: "FAILED", message: "The quantity provided would exceed the maximum  quantity allowed in cart." },
+            QUANTITY_EXCEEDS_MAX_ALLOWED: { status: "FAILED", message: "The quantity provided would exceed the maximum quantity allowed in the cart." },
             LOGIN_DELIVERY_ZIP_MISMATCH: { status: "FAILED", message: "Zip provided during login is different than the zip used in shipping address. This is not allowed." },
             MAX_SHIPPING_COST_EXCEEDED: { status: "FAILED", message: "Actual shipping cost exceeded the maximum specified." },
             MAX_SHIPPING_DAYS_EXCEEDED: { status: "FAILED", message: "Actual shipping days exceeded the maximum specified." },
@@ -39,7 +39,7 @@
             let _noConflictHandler = {
                 noConflict: function () {
                     return function () {
-                        return console.log("jQuery lib not loaded.");
+                        return console.log("jQuery library not loaded.");
                     }.bind(_jsActionContext);
                 }
             }
@@ -82,4 +82,4 @@
             }.bind(_jsActionContext);
         }
     }
-})()
+})();
