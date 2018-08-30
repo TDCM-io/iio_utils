@@ -1,147 +1,284 @@
 (function () {
 
     const STATUS = {
-        AUTH_SUCCESS: {
+            AUTH_SUCCESS: {
+                auth_status: "SUCCESS",
+                auth_message: " "
+            },
+            AUTH_2FA: {
+                auth_status: "2FA",
+                auth_message: " "
+            },
+            AUTH_UNKNOWN: {
+                auth_status: "UNKNOWN",
+                auth_message: " "
+            },
+            ACTION_INCOMPATIBLE_WITH_SOURCE: {
+                status: "FAILURE",
+                message: "This action is incompatible with the given source."
+            },
+            SITE_ERROR: {
+                status: "FAILURE",
+                message: "A site error occurred while trying to perform this action."
+            },
+            USER_LOGGED_OUT: {
+                status: "FAILURE",
+                message: "User is not logged in, for an unknown reason."
+            },
+            ORDER_NUMBER_NOT_EXIST: {
+                status: "FAILURE",
+                message: "Order with provided number does not exist."
+            },
+            INVALID_URL: {
+                status: "FAILURE",
+                message: "URL is invalid."
+            },
+            INVALID_QUANTITY_PROVIDED: {
+                status: "FAILURE",
+                message: "Incorrect quantity value."
+            },
+            PRODUCT_DOES_NOT_EXIST: {
+                status: "FAILURE",
+                message: "Product not found."
+            },
+            PRODUCT_OUT_OF_STOCK: {
+                status: "FAILURE",
+                message: "This product is not available at this time."
+            },
+            PRODUCT_REQUIRES_ADDITIONAL_DETAILS: {
+                status: "FAILURE",
+                message: "Product requires additional details to add to cart."
+            },
+            QUANTITY_EXCEEDS_AVAILABLE_STOCK: {
+                status: "FAILURE",
+                message: "The quantity provided exceeded the actual quantity in stock."
+            },
+            QUANTITY_EXCEEDS_MAX_ALLOWED: {
+                status: "FAILURE",
+                message: "The quantity provided would exceed the maximum quantity allowed in the cart."
+            },
+            LOGIN_DELIVERY_ZIP_MISMATCH: {
+                status: "FAILURE",
+                message: "Zip provided during login is different than the zip used in shipping address. This is not allowed."
+            },
+            MAX_SHIPPING_COST_EXCEEDED: {
+                status: "FAILURE",
+                message: "Actual shipping cost exceeded the maximum specified."
+            },
+            MAX_SHIPPING_DAYS_EXCEEDED: {
+                status: "FAILURE",
+                message: "Actual shipping days exceeded the maximum specified."
+            },
+            MAX_TOTAL_EXCEEDED: {
+                status: "FAILURE",
+                message: "Order total exceeded the maximum specified."
+            },
+            CC_MISMATCH: {
+                status: "FAILURE",
+                message: "Credit card provided was not found or no default credit card exists."
+            },
+            CVV_REQUIRED: {
+                status: "FAILURE",
+                message: "CVV code was not provided in the input."
+            },
+            CVV_INCORRECT: {
+                status: "FAILURE",
+                message: "Provided CVV code is incorrect."
+            },
+            CART_EMPTY: {
+                status: "FAILURE",
+                message: "Shopping cart contains no items."
+            },
+            CART_NOT_EMPTY: {
+                status: "FAILURE",
+                message: "Failed to empty shopping cart."
+            },
+            PRODUCT_NOT_AVAILABLE_FOR_SHIPPING: {
+                status: "FAILURE",
+                message: "Products in cart are not available for shipping."
+            },
+            ADDRESS_MISSING: {
+                status: "FAILURE",
+                message: "Provided address doesn't exist in the list of shipping addresses."
+            },
+            BUY_ACTION_FAILED: {
+                status: "FAILURE",
+                message: "Failed to finalize the order."
+            },
+            REQUIRES_CREDIT_CARD_RE: {
+                status: "FAILURE",
+                message: "Credit card details are required to be re-entered during the final checkout steps. We cannot proceed at this time."
+            },
+            ACTION_NOT_SUPPORTED: {
+                status: "FAILURE",
+                message: "This action is not compatible with this source."
+            },
+            INVALID_TIMEFRAME_QUANTITY: {
+                status: "FAILURE",
+                message: "Invalid number of timeframe inputs."
+            },
+            INVALID_TIMEFRAME: {
+                status: "FAILURE",
+                message: "Invalid timeframe."
+            },
+        },
+        COLUMNS_SET_1 = {
+            status: "SUCCESS",
+            message: " ",
+            sku: " ",
+            product: " ",
+            price: 0,
+            category: " ",
+            description: " ",
+            product_url: " ",
+            image: " "
+        },
+        COLUMNS_SET_2 = {
             auth_status: "SUCCESS",
-            auth_message: " "
+            auth_message: " ",
+            status: "SUCCESS",
+            message: " ",
+            sku: " ",
+            product: " ",
+            price: 0,
+            category: " ",
+            description: " ",
+            product_url: " ",
+            image: " "
         },
-        AUTH_2FA: {
-            auth_status: "2FA",
-            auth_message: " "
+        COLUMNS_SET_3 = {
+            auth_status: "SUCCESS",
+            auth_message: " ",
+            status: "SUCCESS",
+            message: " ",
+            sku: " ",
+            product: " ",
+            price: 0,
+            product_url: " ",
+            quantity: 0
         },
-        AUTH_UNKNOWN: {
-            auth_status: "UNKNOWN",
-            auth_message: " "
-        },
-        ACTION_INCOMPATIBLE_WITH_SOURCE: {
-            status: "FAILURE",
-            message: "This action is incompatible with the given source."
-        },
-        SITE_ERROR: {
-            status: "FAILURE",
-            message: "A site error occurred while trying to perform this action."
-        },
-        USER_LOGGED_OUT: {
-            status: "FAILURE",
-            message: "User is not logged in, for an unknown reason."
-        },
-        ORDER_NUMBER_NOT_EXIST: {
-            status: "FAILURE",
-            message: "Order with provided number does not exist."
-        },
-        INVALID_URL: {
-            status: "FAILURE",
-            message: "URL is invalid."
-        },
-        INVALID_QUANTITY_PROVIDED: {
-            status: "FAILURE",
-            message: "Incorrect quantity value."
-        },
-        PRODUCT_DOES_NOT_EXIST: {
-            status: "FAILURE",
-            message: "Product not found."
-        },
-        PRODUCT_OUT_OF_STOCK: {
-            status: "FAILURE",
-            message: "This product is not available at this time."
-        },
-        PRODUCT_REQUIRES_ADDITIONAL_DETAILS: {
-            status: "FAILURE",
-            message: "Product requires additional details to add to cart."
-        },
-        QUANTITY_EXCEEDS_AVAILABLE_STOCK: {
-            status: "FAILURE",
-            message: "The quantity provided exceeded the actual quantity in stock."
-        },
-        QUANTITY_EXCEEDS_MAX_ALLOWED: {
-            status: "FAILURE",
-            message: "The quantity provided would exceed the maximum quantity allowed in the cart."
-        },
-        LOGIN_DELIVERY_ZIP_MISMATCH: {
-            status: "FAILURE",
-            message: "Zip provided during login is different than the zip used in shipping address. This is not allowed."
-        },
-        MAX_SHIPPING_COST_EXCEEDED: {
-            status: "FAILURE",
-            message: "Actual shipping cost exceeded the maximum specified."
-        },
-        MAX_SHIPPING_DAYS_EXCEEDED: {
-            status: "FAILURE",
-            message: "Actual shipping days exceeded the maximum specified."
-        },
-        MAX_TOTAL_EXCEEDED: {
-            status: "FAILURE",
-            message: "Order total exceeded the maximum specified."
-        },
-        CC_MISMATCH: {
-            status: "FAILURE",
-            message: "Credit card provided was not found or no default credit card exists."
-        },
-        CVV_REQUIRED: {
-            status: "FAILURE",
-            message: "CVV code was not provided in the input."
-        },
-        CVV_INCORRECT: {
-            status: "FAILURE",
-            message: "Provided CVV code is incorrect."
-        },
-        CART_EMPTY: {
-            status: "FAILURE",
-            message: "Shopping cart contains no items."
-        },
-        CART_NOT_EMPTY: {
-            status: "FAILURE",
-            message: "Failed to empty shopping cart."
-        },
-        PRODUCT_NOT_AVAILABLE_FOR_SHIPPING: {
-            status: "FAILURE",
-            message: "Products in cart are not available for shipping."
-        },
-        ADDRESS_MISSING: {
-            status: "FAILURE",
-            message: "Provided address doesn't exist in the list of shipping addresses."
-        },
-        BUY_ACTION_FAILED: {
-            status: "FAILURE",
-            message: "Failed to finalize the order."
-        },
-        REQUIRES_CREDIT_CARD_RE: {
-            status: "FAILURE",
-            message: "Credit card details are required to be re-entered during the final checkout steps. We cannot proceed at this time."
-        },
-        ACTION_NOT_SUPPORTED: {
-            status: "FAILURE",
-            message: "This action is not compatible with this source."
-        },
-        INVALID_TIMEFRAME_QUANTITY: {
-            status: "FAILURE",
-            message: "Invalid number of timeframe inputs."
-        },
-        INVALID_TIMEFRAME: {
-            status: "FAILURE",
-            message: "Invalid timeframe."
-        },
-    },
-    COLUMNS_SET_1 = { status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, category: " ", description: " ", product_url: " ", image: " " },
-    COLUMNS_SET_2 = { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, category: " ", description: " ", product_url: " ", image: " " },
-    COLUMNS_SET_3 = { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, product_url: " ", quantity: 0 },
-    COLUMNS = {
-        "NEG 3.1.1": { auth_status: "SUCCESS", auth_message: " " },
-        "NEG 3.2.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", order_number: " ", order_url: " " },
-        "NEG 3.2.2": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", order_number: " ", date: " ", name: " ", address: " ", address_2: " ", city: " ", state: " ", zip: " ", product_names: " ", product_skus: " ", product_prices: 0, product_urls: " ", product_quantites: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fee: 0, total: 0, delivery_status: " ", tracking_numbers: " ", couriers: " " },
-        "NEG 3.3.1": COLUMNS_SET_1,
-        "NEG 3.3.2": COLUMNS_SET_1,
-        "NEG 3.3.3": COLUMNS_SET_2,
-        "NEG 3.3.4": COLUMNS_SET_2,
-        "NEG 3.4.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", quantity: 0 },
-        "NEG 3.4.2": COLUMNS_SET_3,
-        "NEG 3.4.3": COLUMNS_SET_3,
-        "NEG 3.4.4": COLUMNS_SET_3,
-        "NEG 3.4.5": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " " },
-        "NEG 3.5.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " " },
-        "NEG 3.5.2": { status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " " },
-        "NEG 3.5.3": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " ", order_number: " " }
-    }
+        COLUMNS = {
+            "NEG 3.1.1": {
+                auth_status: "SUCCESS",
+                auth_message: " "
+            },
+            "NEG 3.2.1": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " ",
+                order_number: " ",
+                order_url: " "
+            },
+            "NEG 3.2.2": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " ",
+                order_number: " ",
+                date: " ",
+                name: " ",
+                address: " ",
+                address_2: " ",
+                city: " ",
+                state: " ",
+                zip: " ",
+                product_names: " ",
+                product_skus: " ",
+                product_prices: 0,
+                product_urls: " ",
+                product_quantites: 0,
+                subtotal: 0,
+                tax: 0,
+                shipping: 0,
+                discount: 0,
+                fee: 0,
+                total: 0,
+                delivery_status: " ",
+                tracking_numbers: " ",
+                couriers: " "
+            },
+            "NEG 3.3.1": COLUMNS_SET_1,
+            "NEG 3.3.2": COLUMNS_SET_1,
+            "NEG 3.3.3": COLUMNS_SET_2,
+            "NEG 3.3.4": COLUMNS_SET_2,
+            "NEG 3.4.1": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " ",
+                product: " ",
+                quantity: 0
+            },
+            "NEG 3.4.2": COLUMNS_SET_3,
+            "NEG 3.4.3": COLUMNS_SET_3,
+            "NEG 3.4.4": COLUMNS_SET_3,
+            "NEG 3.4.5": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " "
+            },
+            "NEG 3.5.1": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " ",
+                product: " ",
+                product_url: " ",
+                category: " ",
+                sku: " ",
+                price: 0,
+                image: " ",
+                quantity: 0,
+                subtotal: 0,
+                tax: 0,
+                shipping: 0,
+                discount: 0,
+                fees: 0,
+                total: 0,
+                estimated_delivery_date: " "
+            },
+            "NEG 3.5.2": {
+                status: "SUCCESS",
+                message: " ",
+                product: " ",
+                product_url: " ",
+                category: " ",
+                sku: " ",
+                price: 0,
+                image: " ",
+                quantity: 0,
+                subtotal: 0,
+                tax: 0,
+                shipping: 0,
+                discount: 0,
+                fees: 0,
+                total: 0,
+                estimated_delivery_date: " "
+            },
+            "NEG 3.5.3": {
+                auth_status: "SUCCESS",
+                auth_message: " ",
+                status: "SUCCESS",
+                message: " ",
+                product: " ",
+                product_url: " ",
+                category: " ",
+                sku: " ",
+                price: 0,
+                image: " ",
+                quantity: 0,
+                subtotal: 0,
+                tax: 0,
+                shipping: 0,
+                discount: 0,
+                fees: 0,
+                total: 0,
+                estimated_delivery_date: " ",
+                order_number: " "
+            }
+        }
 
     window.__Utils = class Utils {
         constructor(jsActionContext, columnsKey) {
@@ -185,7 +322,11 @@
             if (timeframes.length != 2)
                 return this.endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME_QUANTITY');
 
-            if (!/^\d{10}$/.test(timeframes[0]) || !/^\d{10}$/.test(timeframes[1]) || (timeframes[1] > parseInt(new Date().getTime() / 1000)))
+            if (!/^\d{10}$/.test(timeframes[0]) ||
+                !/^\d{10}$/.test(timeframes[1]) ||
+                (timeframes[1] > parseInt(new Date().getTime() / 1000)) ||
+                parseInt(timeframes[0]) > parseInt(timeframes[1]))
+
                 return this.endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME');
 
             return true;
