@@ -1,6 +1,6 @@
 (function () {
 
-    let _status = {
+    const STATUS = {
         AUTH_SUCCESS: {
             auth_status: "SUCCESS",
             auth_message: " "
@@ -121,10 +121,31 @@
             status: "FAILURE",
             message: "Invalid timeframe."
         },
+    },
+    COLUMNS_SET_1 = { status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, category: " ", description: " ", product_url: " ", image: " " },
+    COLUMNS_SET_2 = { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, category: " ", description: " ", product_url: " ", image: " " },
+    COLUMNS_SET_3 = { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", sku: " ", product: " ", price: 0, product_url: " ", quantity: 0 },
+    COLUMNS = {
+        "NEG 3.1.1": { auth_status: "SUCCESS", auth_message: " " },
+        "NEG 3.2.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", order_number: " ", order_url: " " },
+        "NEG 3.2.2": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", order_number: " ", date: " ", name: " ", address: " ", address_2: " ", city: " ", state: " ", zip: " ", product_names: " ", product_skus: " ", product_prices: 0, product_urls: " ", product_quantites: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fee: 0, total: 0, delivery_status: " ", tracking_numbers: " ", couriers: " " },
+        "NEG 3.3.1": COLUMNS_SET_1,
+        "NEG 3.3.2": COLUMNS_SET_1,
+        "NEG 3.3.3": COLUMNS_SET_2,
+        "NEG 3.3.4": COLUMNS_SET_2,
+        "NEG 3.4.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", quantity: 0 },
+        "NEG 3.4.2": COLUMNS_SET_3,
+        "NEG 3.4.3": COLUMNS_SET_3,
+        "NEG 3.4.4": COLUMNS_SET_3,
+        "NEG 3.4.5": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " " },
+        "NEG 3.5.1": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " " },
+        "NEG 3.5.2": { status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " " },
+        "NEG 3.5.3": { auth_status: "SUCCESS", auth_message: " ", status: "SUCCESS", message: " ", product: " ", product_url: " ", category: " ", sku: " ", price: 0, image: " ", quantity: 0, subtotal: 0, tax: 0, shipping: 0, discount: 0, fees: 0, total: 0, estimated_delivery_date: " ", order_number: " " }
     }
 
     window.__Utils = class Utils {
-        constructor(jsActionContext) {
+        constructor(jsActionContext, columnsKey) {
+            let _columns = COLUMNS[columnsKey];
             let _noConflictHandler = {
                 noConflict: function () {
                     return function () {
@@ -139,19 +160,20 @@
                 let returnData;
 
                 if (!authFailedMsg) {
-                    let authObj = _status[authObjId] || {};
-                    let statusObj = _status[statusObjId] || {};
+                    let authObj = STATUS[authObjId] || {};
+                    let statusObj = STATUS[statusObjId] || {};
 
-                    if (!_status[authObjId] || !_status[statusObjId])
+                    if (!STATUS[authObjId] || !STATUS[statusObjId])
                         return console.log("authObjId or statusObjId do not match any known status.");
 
-                    returnData = Object.assign(authObj, statusObj)
+                    returnData = Object.assign(authObj, statusObj);
                 } else {
                     returnData = {
                         auth_status: "FAILURE",
                         auth_message: authFailedMsg
                     };
                 }
+                returnData = Object.assign(returnData, _columns);
                 this.memory.returnData = this.createData(returnData);
                 return this.return(this.memory.returnData);
             }.bind(jsActionContext);
