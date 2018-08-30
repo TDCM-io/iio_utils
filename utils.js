@@ -158,11 +158,11 @@
             quantity: 0
         },
         COLUMNS = {
-            "NEG 3.1.1": {
+            "NEG 3.1.1.": {
                 auth_status: "SUCCESS",
                 auth_message: " "
             },
-            "NEG 3.2.1": {
+            "NEG 3.2.1.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
@@ -170,7 +170,7 @@
                 order_number: " ",
                 order_url: " "
             },
-            "NEG 3.2.2": {
+            "NEG 3.2.2.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
@@ -198,11 +198,11 @@
                 tracking_numbers: " ",
                 couriers: " "
             },
-            "NEG 3.3.1": COLUMNS_SET_1,
-            "NEG 3.3.2": COLUMNS_SET_1,
-            "NEG 3.3.3": COLUMNS_SET_2,
-            "NEG 3.3.4": COLUMNS_SET_2,
-            "NEG 3.4.1": {
+            "NEG 3.3.1.": COLUMNS_SET_1,
+            "NEG 3.3.2.": COLUMNS_SET_1,
+            "NEG 3.3.3.": COLUMNS_SET_2,
+            "NEG 3.3.4.": COLUMNS_SET_2,
+            "NEG 3.4.1.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
@@ -210,16 +210,16 @@
                 product: " ",
                 quantity: 0
             },
-            "NEG 3.4.2": COLUMNS_SET_3,
-            "NEG 3.4.3": COLUMNS_SET_3,
-            "NEG 3.4.4": COLUMNS_SET_3,
-            "NEG 3.4.5": {
+            "NEG 3.4.2.": COLUMNS_SET_3,
+            "NEG 3.4.3.": COLUMNS_SET_3,
+            "NEG 3.4.4.": COLUMNS_SET_3,
+            "NEG 3.4.5.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
                 message: " "
             },
-            "NEG 3.5.1": {
+            "NEG 3.5.1.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
@@ -239,7 +239,7 @@
                 total: 0,
                 estimated_delivery_date: " "
             },
-            "NEG 3.5.2": {
+            "NEG 3.5.2.": {
                 status: "SUCCESS",
                 message: " ",
                 product: " ",
@@ -257,7 +257,7 @@
                 total: 0,
                 estimated_delivery_date: " "
             },
-            "NEG 3.5.3": {
+            "NEG 3.5.3.": {
                 auth_status: "SUCCESS",
                 auth_message: " ",
                 status: "SUCCESS",
@@ -325,9 +325,9 @@
             if (!/^\d{10}$/.test(timeframes[0]) ||
                 !/^\d{10}$/.test(timeframes[1]) ||
                 (parseInt(timeframes[1]) > new Date().getTime() / 1000) ||
-                parseInt(timeframes[0]) > parseInt(timeframes[1]))
-
+                parseInt(timeframes[0]) > parseInt(timeframes[1])) {
                 return this.endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME');
+            }
 
             return true;
         }
