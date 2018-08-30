@@ -170,7 +170,9 @@
                 } else {
                     returnData = {
                         auth_status: "FAILURE",
-                        auth_message: authFailedMsg
+                        auth_message: authFailedMsg,
+                        status: "FAILURE",
+                        message: " "
                     };
                 }
                 returnData = Object.assign(returnData, _columns);
