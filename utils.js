@@ -175,7 +175,7 @@
                         message: " "
                     };
                 }
-                returnData = Object.assign(returnData, _columns);
+                returnData = Object.assign(_columns, returnData);
                 this.memory.returnData = this.createData(returnData);
                 return this.return(this.memory.returnData);
             }.bind(jsActionContext);
