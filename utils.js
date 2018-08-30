@@ -145,7 +145,7 @@
 
     window.__Utils = class Utils {
         constructor(jsActionContext, columnsKey) {
-            let _columns = COLUMNS[columnsKey];
+            let _columns = COLUMNS[columnsKey] || {};
             let _noConflictHandler = {
                 noConflict: function () {
                     return function () {
