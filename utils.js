@@ -3,9 +3,9 @@
     let _jsActionContext,
         _endEx,
         _status = {
-            AUTH_SUCCESS: { auth_status: "SUCCESS", auth_message: "" },
-            AUTH_2FA: { auth_status: "2FA", auth_message: "" },
-            AUTH_UNKNOWN: { auth_status: "UNKNOWN", auth_message: "" },
+            AUTH_SUCCESS: { auth_status: "SUCCESS", auth_message: " " },
+            AUTH_2FA: { auth_status: "2FA", auth_message: " " },
+            AUTH_UNKNOWN: { auth_status: "UNKNOWN", auth_message: " " },
             ACTION_INCOMPATIBLE_WITH_SOURCE: { status: "FAILED", message: "This action is incompatible with the given source." },
             SITE_ERROR: { status: "FAILED", message: "A site error occurred while trying to perform this action." },
             USER_LOGGED_OUT: { status: "FAILED", message: "User is not logged in, for an unknown reason." },
