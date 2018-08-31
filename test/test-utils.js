@@ -8,6 +8,7 @@ var code = fs.readFileSync(path);
 class importContext {
   constructor() {
     this.memory = {};
+    this.lastResponseData = {};
   }
 
   createData(data) {
@@ -50,6 +51,13 @@ describe('utils.js', function () {
       message: " "
     });
 
+    utils = new window.__Utils(new importContext(), 'NEG 3.1.1.');
+    // return both only authentication failure (NEG 3.1.1)
+    expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({
+      auth_status: "FAILURE",
+      auth_message: 'Failure message'
+    });
+
     utils = new window.__Utils(new importContext());
     // return only failure message (no auth)
     expect(utils.endEx(null, 'INVALID_URL')).to.deep.equal({
@@ -67,9 +75,9 @@ describe('utils.js', function () {
     expect(utils.endEx('InvalidObjId', 'INVALID_URL')).to.equal('authObjId or statusObjId do not match any known status.');
     expect(utils.endEx('AUTH_SUCCESS', 'InvalidObjId')).to.equal('authObjId or statusObjId do not match any known status.');
     expect(utils.endEx('InvalidObjId', 'InvalidObjId')).to.equal('authObjId or statusObjId do not match any known status.');
-    
+
     // restore console.log
-    console.log = temp; 
+    console.log = temp;
   });
 
   it('delay works', () => {
@@ -88,6 +96,24 @@ describe('utils.js', function () {
     expect(utils.checkTimeframes(["1231231231", "1231231235"])).to.equal(true); // valid test case
     expect(utils.checkTimeframes(["1231231", "1231123231235"])).to.not.equal(true); // 10 digits
     expect(utils.checkTimeframes(["9999999998", "9999999999"])).to.not.equal(true); // first timeframe can't be in the future
-
   });
-})
+
+  it('handle404 works', () => {
+    var utils = new window.__Utils(new importContext());
+    const bad_codes = [401, 402, 403, 404, 405, 406, 407, 408, 500, 501, 502, 503, 504, 505].map(x => x.toString());
+    const good_codes = [200, 201, 202, 203, 204, 205, 206].map(x => x.toString());
+    bad_codes.forEach(x => {
+      let context = new importContext();
+      context.lastResponseData.code = x;
+      utils = new window.__Utils(context);
+      expect(utils.handle404()).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+    });
+
+    good_codes.forEach(x => {
+      let context = new importContext();
+      context.lastResponseData.code = x;
+      utils = new window.__Utils(context);
+      expect(utils.handle404()).to.not.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+    });
+  });
+});

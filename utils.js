@@ -303,9 +303,6 @@
                     if(!statusObj || !authObj)
                         return console.log("authObjId or statusObjId do not match any known status.");
                     
-                    if (!STATUS[authObjId] && !STATUS[statusObjId])
-                        return console.log("authObjId and statusObjId do not match any known status.");
-
                     returnData = Object.assign(authObj, statusObj);
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
@@ -326,11 +323,11 @@
             }.bind(jsActionContext);
 
             this.handle404 = function() {
-                var regEx = /[45].*/;
-                if (regEx.test(this.lastResponseData.code)) {
-                  return this.endEx('AUTH_SUCCESS', 'Invalid URL.')
+                var regEx = /[45]\d{2}/;
+                if (regEx.test(jsActionContext.lastResponseData.code)) {
+                  return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
                 }
-            }.bind(jsActionContext);
+            }
         }
 
         checkTimeframes(timeframes) {
