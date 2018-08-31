@@ -304,12 +304,17 @@
                         return console.log("authObjId and statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
-                } else {
+                } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
                         auth_status: "FAILURE",
                         auth_message: authFailedMsg,
                         status: "FAILURE",
                         message: " "
+                    };
+                } else {
+                    returnData = {
+                        auth_status: "FAILURE",
+                        auth_message: authFailedMsg
                     };
                 }
                 returnData = Object.assign(_columns, returnData);
