@@ -120,6 +120,10 @@
                 status: "FAILURE",
                 message: "Invalid timeframe."
             },
+            INPUT_MISSING: {
+                status: "FAILURE",
+                message: "Required input missing."
+            },            
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
