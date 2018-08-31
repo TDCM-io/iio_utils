@@ -297,9 +297,12 @@
                 let returnData;
 
                 if (!authFailedMsg) {
-                    let authObj = STATUS[authObjId] || {};
-                    let statusObj = STATUS[statusObjId] || {};
-
+                    let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
+                    let statusObj = STATUS[statusObjId];
+                    
+                    if(!statusObj || !authObj)
+                        return console.log("authObjId or statusObjId do not match any known status.");
+                    
                     if (!STATUS[authObjId] && !STATUS[statusObjId])
                         return console.log("authObjId and statusObjId do not match any known status.");
 
@@ -321,6 +324,13 @@
                 this.memory.returnData = this.createData(returnData);
                 return this.return(this.memory.returnData);
             }.bind(jsActionContext);
+
+            this.handle404 = function() {
+                var regEx = /[45].*/;
+                if (regEx.test(this.lastResponseData.code)) {
+                  return this.endEx('AUTH_SUCCESS', 'Invalid URL.')
+                }
+            }.bind(jsActionContext);
         }
 
         checkTimeframes(timeframes) {
@@ -341,11 +351,6 @@
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
 
-        handle404() {
-            var regEx = /[45].*/;
-            if (regEx.test(this.lastResponseData.code)) {
-              return this.endEx('AUTH_SUCCESS', 'Invalid URL.')
-            }
-        }
+        
     }
 })();
