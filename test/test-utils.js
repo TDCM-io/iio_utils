@@ -27,12 +27,12 @@ describe('utils.js', function () {
     vm.runInThisContext(code.toString());
   });
 
-  it('should load', function () {
+  it('library loads', function () {
     var utils = new window.__Utils(this);
     expect(utils.loaded).to.equal(true);
   });
 
-  it('endEx works', () => {
+  it('endEx() works', () => {
     var utils = new window.__Utils(new importContext());
     // return both authentication and failure message
     expect(utils.endEx('AUTH_SUCCESS', 'INVALID_URL')).to.deep.equal({
@@ -80,7 +80,7 @@ describe('utils.js', function () {
     console.log = temp;
   });
 
-  it('delay works', () => {
+  it('delay() works', () => {
     var utils = new window.__Utils(this);
     let start = new Date();
     return utils.delay(1000).then(() => {
@@ -88,7 +88,7 @@ describe('utils.js', function () {
     });
   });
 
-  it('checking timeframes works', () => {
+  it('checkTimeframes() works', () => {
     var utils = new window.__Utils(new importContext());
 
     expect(utils.checkTimeframes(["1231231231"])).to.not.equal(true); // two timeframes in array required
@@ -98,10 +98,11 @@ describe('utils.js', function () {
     expect(utils.checkTimeframes(["9999999998", "9999999999"])).to.not.equal(true); // first timeframe can't be in the future
   });
 
-  it('handle404 works', () => {
+  it('handle404() works', () => {
     var utils = new window.__Utils(new importContext());
     const bad_codes = [401, 402, 403, 404, 405, 406, 407, 408, 500, 501, 502, 503, 504, 505].map(x => x.toString());
     const good_codes = [200, 201, 202, 203, 204, 205, 206].map(x => x.toString());
+
     bad_codes.forEach(x => {
       let context = new importContext();
       context.lastResponseData.code = x;

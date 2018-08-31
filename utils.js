@@ -299,10 +299,10 @@
                 if (!authFailedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
                     let statusObj = STATUS[statusObjId];
-                    
-                    if(!statusObj || !authObj)
+
+                    if (!statusObj || !authObj)
                         return console.log("authObjId or statusObjId do not match any known status.");
-                    
+
                     returnData = Object.assign(authObj, statusObj);
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
@@ -322,10 +322,10 @@
                 return this.return(this.memory.returnData);
             }.bind(jsActionContext);
 
-            this.handle404 = function() {
+            this.handle404 = function () {
                 var regEx = /[45]\d{2}/;
                 if (regEx.test(jsActionContext.lastResponseData.code)) {
-                  return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
+                    return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
                 }
             }
         }
@@ -347,7 +347,5 @@
         delay(timeout) {
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
-
-        
     }
 })();
