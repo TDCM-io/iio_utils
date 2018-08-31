@@ -187,7 +187,7 @@
                 product_skus: " ",
                 product_prices: 0,
                 product_urls: " ",
-                product_quantites: 0,
+                product_quantities: 0,
                 subtotal: 0,
                 tax: 0,
                 shipping: 0,
