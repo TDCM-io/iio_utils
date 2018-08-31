@@ -348,13 +348,6 @@
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
 
-        handle404() {
-            var regEx = /[45].*/;
-            if (regEx.test(this.lastResponseData.code)) {
-              return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
-            }
-        }
-
         // use with await
         async safeRedirect(URL, fetchOptions) {
             var isOk;
