@@ -347,20 +347,5 @@
               return this.endEx('AUTH_SUCCESS', 'Invalid URL.')
             }
         }
-        
-        safeRedirect(URL, fetchOptions) {
-            var isOk;
-            await fetch(URL, fetchOptions)
-              .then(function(response) {
-                isOk = response.ok;
-              })
-           
-            if (!isOk) {
-              this.memory.error['message'] = 'Invalid URL.';
-              return this.return(this.createData(this.memory.error));
-            }
-           
-            window.location = URL;
-        }
     }
 })();
