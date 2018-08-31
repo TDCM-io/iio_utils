@@ -1,5 +1,4 @@
 (function () {
-
     const STATUS = {
             AUTH_SUCCESS: {
                 auth_status: "SUCCESS",
@@ -299,7 +298,7 @@
                 if (!authFailedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
                     let statusObj = (typeof statusObjId === 'string') ? STATUS[statusObjId] : {};
-                    
+
                     if ((authObjId === null && statusObjId === null) || !statusObj || !authObj)
                         return console.log("authObjId or statusObjId do not match any known status.");
 
@@ -349,25 +348,25 @@
         }
 
         // use with await
-        async safeRedirect(URL, fetchOptions) {
-            var isOk;
+        async safeRedirect(URL, fetchOptions = {}) {
+            var isOk = false;
             //Basic fetchOptions {"credentials":"include"}
             await fetch(URL, fetchOptions)
-              .then(function(response) {
-                isOk = response.ok;
-              })
-           
+                .then(function (response) {
+                    isOk = response.ok;
+                }).catch(reason => {});
+
             if (!isOk) {
-              return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
+                return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
             }
-            window.location = URL;
+            window.location.replace(URL);
         }
 
         // use with await
         async fetchHTMLBody(URL, fetchOptions) {
             let parser = new DOMParser();
             //Basic fetchOptions {"credentials":"include"}
-            var response = await fetch(URL,fetchOptions);
+            var response = await fetch(URL, fetchOptions);
             var text = await response.text();
             return parser.parseFromString(text, 'text/html');
         }

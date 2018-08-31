@@ -24,7 +24,10 @@ describe('utils.js', function () {
   jsdom();
 
   before(function () {
-    vm.runInThisContext(code.toString());
+    let context = vm.createContext({ ...window,
+      fetch: require('node-fetch')
+    });
+    vm.runInNewContext(code.toString(), context);
   });
 
   it('library loads', function () {
@@ -110,6 +113,7 @@ describe('utils.js', function () {
     const bad_codes = [401, 402, 403, 404, 405, 406, 407, 408, 500, 501, 502, 503, 504, 505].map(x => x.toString());
     const good_codes = [200, 201, 202, 203, 204, 205, 206].map(x => x.toString());
 
+    // check invalid codes
     bad_codes.forEach(x => {
       let context = new importContext();
       context.lastResponseData.code = x;
@@ -117,11 +121,26 @@ describe('utils.js', function () {
       expect(utils.handle404()).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
     });
 
+    // check valid codes
     good_codes.forEach(x => {
       let context = new importContext();
       context.lastResponseData.code = x;
       utils = new window.__Utils(context);
       expect(utils.handle404()).to.not.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
     });
+  });
+
+  it('safeRedirect() works', async () => {
+    var utils = new window.__Utils(new importContext());
+
+    var response = await utils.safeRedirect('https://www.google.com', {
+      mode: 'no-cors'
+    });
+    expect(response).to.not.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+
+    var response = await utils.safeRedirect('https://www.target.com/p/coleman--174--quickpump-120v-pump/-/A-11115253invalid', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
 });
