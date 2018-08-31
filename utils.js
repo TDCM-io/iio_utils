@@ -365,10 +365,15 @@
         // use with await
         async fetchHTMLBody(URL, fetchOptions) {
             let parser = new DOMParser();
+            let isOk = true;
             //Basic fetchOptions {"credentials":"include"}
-            var response = await fetch(URL, fetchOptions);
-            var text = await response.text();
-            return parser.parseFromString(text, 'text/html');
+            var text = await fetch(URL, fetchOptions).then(response => response.text()).catch(reason => {
+                isOk = false;
+            });
+            if (isOk)
+                return parser.parseFromString(text, 'text/html');
+            else
+                return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
         }
     }
 })();

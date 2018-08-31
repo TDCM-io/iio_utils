@@ -24,8 +24,22 @@ describe('utils.js', function () {
   jsdom();
 
   before(function () {
+
+    const {
+      JSDOM
+    } = require('jsdom');
+
+    class DOMParser {
+      constructor() {}
+
+      parseFromString(URL, mode) {
+        return new JSDOM(URL);
+      }
+    };
+
     let context = vm.createContext({ ...window,
-      fetch: require('node-fetch')
+      fetch: require('node-fetch'),
+      DOMParser: DOMParser
     });
     vm.runInNewContext(code.toString(), context);
   });
@@ -133,12 +147,30 @@ describe('utils.js', function () {
   it('safeRedirect() works', async () => {
     var utils = new window.__Utils(new importContext());
 
+    // check valid URL
     var response = await utils.safeRedirect('https://www.google.com', {
       mode: 'no-cors'
     });
     expect(response).to.not.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
 
+    // check invalid URL (code: 404)
     var response = await utils.safeRedirect('https://www.target.com/p/coleman--174--quickpump-120v-pump/-/A-11115253invalid', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+  });
+
+  it('fetchHTMLBody() works', async () => {
+    var utils = new window.__Utils(new importContext());
+
+    // check valid HTML
+    var response = await utils.fetchHTMLBody('https://www.google.com', {
+      mode: 'no-cors'
+    });
+    expect(response.window.document.querySelector('form[action="/search"]')).to.not.equal(null);
+    
+    // check invalid HTML (code: 404)
+    var response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
       mode: 'no-cors'
     });
     expect(response).to.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
