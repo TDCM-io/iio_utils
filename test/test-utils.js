@@ -59,6 +59,13 @@ describe('utils.js', function () {
     });
 
     utils = new window.__Utils(new importContext());
+    // return only auth message
+    expect(utils.endEx('AUTH_UNKNOWN', null)).to.deep.equal({
+      auth_status: "UNKNOWN",
+      auth_message: " "
+    });
+
+    utils = new window.__Utils(new importContext());
     // return only failure message (no auth)
     expect(utils.endEx(null, 'INVALID_URL')).to.deep.equal({
       status: "FAILURE",

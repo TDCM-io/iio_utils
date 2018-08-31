@@ -298,9 +298,9 @@
 
                 if (!authFailedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
-                    let statusObj = STATUS[statusObjId];
-
-                    if (!statusObj || !authObj)
+                    let statusObj = (typeof statusObjId === 'string') ? STATUS[statusObjId] : {};
+                    
+                    if ((authObjId === null && statusObjId === null) || !statusObj || !authObj)
                         return console.log("authObjId or statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
