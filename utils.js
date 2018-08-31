@@ -300,8 +300,8 @@
                     let authObj = STATUS[authObjId] || {};
                     let statusObj = STATUS[statusObjId] || {};
 
-                    if (!STATUS[authObjId] || !STATUS[statusObjId])
-                        return console.log("authObjId or statusObjId do not match any known status.");
+                    if (!STATUS[authObjId] && !STATUS[statusObjId])
+                        return console.log("authObjId and statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
                 } else {
