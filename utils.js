@@ -296,10 +296,10 @@
             this.loaded = true;
             this.$ = (window.jQuery || _noConflictHandler).noConflict();
 
-            this.endEx = function (authObjId, statusObjId, authFailedMsg) {
+            this.endEx = function (authObjId, statusObjId, authFailedMsg, failedMsg) {
                 let returnData;
 
-                if (!authFailedMsg) {
+                if (!authFailedMsg && !failedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
                     let statusObj = (typeof statusObjId === 'string') ? STATUS[statusObjId] : {};
 
@@ -307,6 +307,13 @@
                         return console.log("authObjId or statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
+                } else if (failedMsg) {
+                    returnData = {
+                        auth_status: "SUCCESS",
+                        auth_message: " ",
+                        status: "FAILURE",
+                        message: failedMsg
+                    };
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
                         auth_status: "FAILURE",
