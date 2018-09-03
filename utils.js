@@ -123,6 +123,18 @@
             INPUT_MISSING: {
                 status: "FAILURE",
                 message: "Required input missing."
+            },
+            INVALID_ZIP_CODE: {
+                status: "FAILURE",
+                message: "Invalid zip code. Must consist of 5 digits."
+            },
+            INVALID_PHONE: {
+                status: "FAILURE",
+                message: "Invalid phone number. Must consist of 10 digits."
+            },
+            INVALID_STATE: {
+                status: "FAILURE",
+                message: "Invalid state. Must consist of 2 letters."
             },            
         },
         COLUMNS_SET_1 = {
@@ -296,10 +308,10 @@
             this.loaded = true;
             this.$ = (window.jQuery || _noConflictHandler).noConflict();
 
-            this.endEx = function (authObjId, statusObjId, authFailedMsg, failedMsg) {
+            this.endEx = function (authObjId, statusObjId, authFailedMsg) {
                 let returnData;
 
-                if (!authFailedMsg && !failedMsg) {
+                if (!authFailedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
                     let statusObj = (typeof statusObjId === 'string') ? STATUS[statusObjId] : {};
 
@@ -307,13 +319,6 @@
                         return console.log("authObjId or statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
-                } else if (failedMsg) {
-                    returnData = {
-                        auth_status: "SUCCESS",
-                        auth_message: " ",
-                        status: "FAILURE",
-                        message: failedMsg
-                    };
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
                         auth_status: "FAILURE",
