@@ -136,6 +136,10 @@
                 status: "FAILURE",
                 message: "Invalid state. Must consist of 2 letters."
             },
+            UNKNOWN_ERROR: {
+                status: "FAILURE",
+                message: "Extraction failed for an unknown reason."
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
