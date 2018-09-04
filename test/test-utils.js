@@ -41,6 +41,7 @@ describe('utils.js', function () {
       fetch: require('node-fetch'),
       DOMParser: DOMParser
     });
+
     vm.runInNewContext(code.toString(), context);
   });
 
@@ -168,11 +169,11 @@ describe('utils.js', function () {
       mode: 'no-cors'
     });
     expect(response.window.document.querySelector('form[action="/search"]')).to.not.equal(null);
-    
+
     // check invalid HTML (code: 404)
     var response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
       mode: 'no-cors'
     });
-    expect(response).to.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+    expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
 });

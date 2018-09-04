@@ -135,7 +135,7 @@
             INVALID_STATE: {
                 status: "FAILURE",
                 message: "Invalid state. Must consist of 2 letters."
-            },            
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
@@ -337,23 +337,23 @@
                 return this.return(this.memory.returnData);
             }.bind(jsActionContext);
 
-            this.handle404 = function () {
+            this.handle404 = function (authObjId = 'AUTH_SUCCESS') {
                 var regEx = /[45]\d{2}/;
                 if (regEx.test(jsActionContext.lastResponseData.code)) {
-                    return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
+                    return this.endEx(authObjId, 'INVALID_URL');
                 }
             }
         }
 
-        checkTimeframes(timeframes) {
+        checkTimeframes(timeframes, authObjId = 'AUTH_SUCCESS') {
             if (timeframes.length != 2)
-                return this.endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME_QUANTITY');
+                return this.endEx(authObjId, 'INVALID_TIMEFRAME_QUANTITY');
 
             if (!/^\d{10}$/.test(timeframes[0]) ||
                 !/^\d{10}$/.test(timeframes[1]) ||
                 (parseInt(timeframes[1]) > new Date().getTime() / 1000) ||
                 parseInt(timeframes[0]) > parseInt(timeframes[1])) {
-                return this.endEx('AUTH_SUCCESS', 'INVALID_TIMEFRAME');
+                return this.endEx(authObjId, 'INVALID_TIMEFRAME');
             }
 
             return true;
@@ -363,33 +363,40 @@
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
 
-        // use with await
-        async safeRedirect(URL, fetchOptions = {}) {
+        async safeRedirect(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
             var isOk = false;
-            //Basic fetchOptions {"credentials":"include"}
+
             await fetch(URL, fetchOptions)
                 .then(function (response) {
                     isOk = response.ok;
                 }).catch(reason => {});
 
             if (!isOk) {
-                return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
+                return this.endEx(authObjId, 'INVALID_URL');
             }
             window.location.replace(URL);
         }
 
-        // use with await
-        async fetchHTMLBody(URL, fetchOptions) {
+        async fetchHTMLBody(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
             let parser = new DOMParser();
             let isOk = true;
-            //Basic fetchOptions {"credentials":"include"}
+
             var text = await fetch(URL, fetchOptions).then(response => response.text()).catch(reason => {
                 isOk = false;
             });
             if (isOk)
                 return parser.parseFromString(text, 'text/html');
             else
-                return this.endEx('AUTH_SUCCESS', 'INVALID_URL');
+                return this.endEx(authObjId, 'INVALID_URL');
+        }
+
+        async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
+            var doc = await this.fetchHTMLBody(URL, fetchOptions);
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+            if (test) {
+                this.endEx(authObjId, 'INVALID_URL');
+            }
         }
     }
 })();
