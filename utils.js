@@ -372,7 +372,7 @@
                 .then(function (response) {
                     isOk = response.ok;
                 }).catch(reason => {});
-            console.log(isOK);
+            console.log(isOk);
             if (!isOk) {
                 console.log('return');
                 return this.endEx(authObjId, 'INVALID_URL');
