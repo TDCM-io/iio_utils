@@ -400,18 +400,22 @@
         }
 
         async checkDestinationBody(URL, xpath, fetchOptions = {
-            'credentials': 'include'
+            'credentials': 'include',
+            'mode': 'no-cors'
         }) {
-            var doc = await this.fetchHTMLBody(URL, fetchOptions)
-                .then(x => ('window' in x) ? (x.window.document) : false)
-                .catch(x => false);
 
-            if (!doc)
-                return false;
+            var parser = new DOMParser();
+            var text = await fetch(URL, fetchOptions)
+                .then(response => response.text())
+                .catch(x => {
+                    console.log(x);
+                    return "";
+                });
 
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue; // returns a list of nodes
+            var doc = parser.parseFromString(text, 'text/html').window.document;
 
-            return test ? true : false;
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            return !!test;
         }
     }
 })();

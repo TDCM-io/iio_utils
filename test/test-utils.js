@@ -198,5 +198,11 @@ describe('utils.js', function () {
       mode: 'no-cors'
     });
     expect(response).to.equal(false);
+
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.target.com/p/modern-wood-and-velour-dining-chair-green-zm-home/-/A-16577asdfs319', '(//div[@class[contains(., "ProductNotFound")]]) | (//p[contains(./text(), "we\'re sorry")])', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(true);
   });
 });
