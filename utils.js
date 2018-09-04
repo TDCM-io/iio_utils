@@ -305,6 +305,8 @@
                     }.bind(jsActionContext);
                 }
             }
+            var _this = this;
+            this.returnData = null;
             this.loaded = true;
             this.$ = (window.jQuery || _noConflictHandler).noConflict();
 
@@ -334,7 +336,7 @@
                 }
                 returnData = Object.assign(_columns, returnData);
                 this.memory.returnData = this.createData(returnData);
-                return this.return(this.memory.returnData);
+                return (_this.returnData = this.return(this.memory.returnData));
             }.bind(jsActionContext);
 
             this.handle404 = function (authObjId = 'AUTH_SUCCESS') {
@@ -392,7 +394,7 @@
 
         async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
             var doc = await this.fetchHTMLBody(URL, fetchOptions);
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE);
 
             if (test) {
                 return this.endEx(authObjId, 'INVALID_URL');
