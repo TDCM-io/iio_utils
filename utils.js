@@ -394,9 +394,9 @@
 
         async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
             var doc = await this.fetchHTMLBody(URL, fetchOptions);
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE);
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE); // returns a list of nodes
 
-            if (test) {
+            if (test.length != 0) {
                 return this.endEx(authObjId, 'INVALID_URL');
             }
         }
