@@ -392,7 +392,7 @@
                 .catch(reason => {
                     isOk = false;
                 });
-            
+
             if (isOk)
                 return parser.parseFromString(text, 'text/html');
             else
@@ -403,16 +403,15 @@
             'credentials': 'include'
         }) {
             var doc = await this.fetchHTMLBody(URL, fetchOptions)
-                .then(x => ('window' in x) ? x.window.document : false)
+                .then(x => ('window' in x) ? (x.window.document) : false)
                 .catch(x => false);
 
             if (!doc)
                 return false;
 
-            console.log(doc);
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue; // returns a list of nodes
 
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE); // returns a list of nodes
-            return test.length > 0;
+            return test ? true : false;
         }
     }
 })();

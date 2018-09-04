@@ -180,23 +180,23 @@ describe('utils.js', function () {
     expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
 
-  // it('checkDestinationBody() works', async () => {
-  //   var utils = new window.__Utils(new importContext());
-  //   var response = await utils.checkDestinationBody('https://www.google.com', '//div[@class="asdf"]/td/td', {
-  //     mode: 'no-cors'
-  //   });
-  //   expect(response).to.equal(false);
+  it('checkDestinationBody() works', async () => {
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.google.com', '//div[@class="asdf"]/td/td', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(false);
 
-  //   var utils = new window.__Utils(new importContext());
-  //   var response = await utils.checkDestinationBody('https://www.google.com', '//div', {
-  //     mode: 'no-cors'
-  //   });
-  //   expect(response).to.equal(true);
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.google.com', '//div', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(true);
 
-  //   var utils = new window.__Utils(new importContext());
-  //   var response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div/a/td/td', {
-  //     mode: 'no-cors'
-  //   });
-  //   expect(response).to.equal(false);    
-  // });
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div/a/td/td', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(false);
+  });
 });
