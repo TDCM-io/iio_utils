@@ -392,10 +392,10 @@
 
         async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
             var doc = await this.fetchHTMLBody(URL, fetchOptions);
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
             if (test) {
-                this.endEx(authObjId, 'INVALID_URL');
+                return this.endEx(authObjId, 'INVALID_URL');
             }
         }
     }
