@@ -366,14 +366,15 @@
         }
 
         async safeRedirect(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
-            var isOk = false;
+            var isOk;
 
             await fetch(URL, fetchOptions)
                 .then(function (response) {
                     isOk = response.ok;
                 }).catch(reason => {});
-
+            console.log(isOK);
             if (!isOk) {
+                console.log('return');
                 return this.endEx(authObjId, 'INVALID_URL');
             }
             window.location.replace(URL);
