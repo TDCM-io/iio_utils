@@ -176,20 +176,4 @@ describe('utils.js', function () {
     });
     expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
-
-  it('checkDestinationBody() works', async () => {
-    var utils = new window.__Utils(new importContext());
-
-    // check valid HTML
-    var response = await utils.checkDestinationBody('https://www.google.com', '//div', {
-      mode: 'no-cors'
-    });
-    //expect(response.window.document.querySelector('form[action="/search"]')).to.not.equal(null);
-
-    // check invalid HTML (code: 404)
-    var response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div', {
-      mode: 'no-cors'
-    });
-    //expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
-  });
 });
