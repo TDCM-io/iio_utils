@@ -10,7 +10,8 @@
     "gulp": "^3.9.1",
     "jsdom": "11.11.0",
     "mocha-jsdom": "^2.0.0",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.2.0",
+    "wgxpath": "^1.2.0"
   },
   "dependencies": {
     "chai": "^4.1.2",

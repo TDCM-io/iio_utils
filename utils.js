@@ -365,7 +365,9 @@
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
 
-        async safeRedirect(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
+        async safeRedirect(URL, fetchOptions = {
+            'credentials': 'include'
+        }, authObjId = 'AUTH_SUCCESS') {
             var isOk = false;
 
             await fetch(URL, fetchOptions)
@@ -379,26 +381,38 @@
             window.location.replace(URL);
         }
 
-        async fetchHTMLBody(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
+        async fetchHTMLBody(URL, fetchOptions = {
+            'credentials': 'include'
+        }, authObjId = 'AUTH_SUCCESS') {
             let parser = new DOMParser();
             let isOk = true;
 
-            var text = await fetch(URL, fetchOptions).then(response => response.text()).catch(reason => {
-                isOk = false;
-            });
+            var text = await fetch(URL, fetchOptions)
+                .then(response => response.text())
+                .catch(reason => {
+                    isOk = false;
+                });
+            
             if (isOk)
                 return parser.parseFromString(text, 'text/html');
             else
                 return this.endEx(authObjId, 'INVALID_URL');
         }
 
-        async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
-            var doc = await this.fetchHTMLBody(URL, fetchOptions);
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE); // returns a list of nodes
+        async checkDestinationBody(URL, xpath, fetchOptions = {
+            'credentials': 'include'
+        }) {
+            var doc = await this.fetchHTMLBody(URL, fetchOptions)
+                .then(x => ('window' in x) ? x.window.document : false)
+                .catch(x => false);
 
-            if (test.length != 0) {
-                return this.endEx(authObjId, 'INVALID_URL');
-            }
+            if (!doc)
+                return false;
+
+            console.log(doc);
+
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE); // returns a list of nodes
+            return test.length > 0;
         }
     }
 })();
