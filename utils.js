@@ -140,6 +140,10 @@
                 status: "FAILURE",
                 message: "Extraction failed for an unknown reason."
             },
+            PRODUCT_NOT_ADDED_TO_CART: {
+                status: "FAILURE",
+                message: "Product was not added to cart for an unknown reason."
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
