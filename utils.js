@@ -412,11 +412,10 @@
             var text = await fetch(URL, fetchOptions)
                 .then(response => response.text())
                 .catch(x => {
-                    console.log(x);
                     return "";
                 });
 
-            var doc = parser.parseFromString(text, 'text/html').window.document;
+            var doc = parser.parseFromString(text, 'text/html');//.window.document;
 
             var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             return !!test;

@@ -34,7 +34,7 @@ describe('utils.js', function () {
       constructor() {}
 
       parseFromString(URL, mode) {
-        return new JSDOM(URL);
+        return new JSDOM(URL).window.document;
       }
     };
 
@@ -170,8 +170,8 @@ describe('utils.js', function () {
     var response = await utils.fetchHTMLBody('https://www.google.com', {
       mode: 'no-cors'
     });
-    expect(response.window.document).to.have.property('querySelector');
-    expect(response.window.document.querySelector('form[action="/search"]')).to.not.equal(null);
+    expect(response).to.have.property('querySelector');
+    expect(response.querySelector('form[action="/search"]')).to.not.equal(null);
 
     // check invalid HTML (code: 404)
     var response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
