@@ -28,18 +28,20 @@ describe('utils.js', function () {
     const {
       JSDOM
     } = require('jsdom');
+    var wgxpath = require('wgxpath');
 
     class DOMParser {
       constructor() {}
 
       parseFromString(URL, mode) {
-        return new JSDOM(URL);
+        return new JSDOM(URL).window.document;
       }
     };
 
     let context = vm.createContext({ ...window,
       fetch: require('node-fetch'),
-      DOMParser: DOMParser
+      DOMParser: DOMParser,
+      XPathResult: wgxpath.XPathResultType
     });
 
     vm.runInNewContext(code.toString(), context);
@@ -168,12 +170,39 @@ describe('utils.js', function () {
     var response = await utils.fetchHTMLBody('https://www.google.com', {
       mode: 'no-cors'
     });
-    expect(response.window.document.querySelector('form[action="/search"]')).to.not.equal(null);
+    expect(response).to.have.property('querySelector');
+    expect(response.querySelector('form[action="/search"]')).to.not.equal(null);
 
     // check invalid HTML (code: 404)
     var response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
       mode: 'no-cors'
     });
     expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+  });
+
+  it('checkDestinationBody() works', async () => {
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.google.com', '//div[@class="asdf"]/td/td', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(false);
+
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.google.com', '//div', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(true);
+
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div/a/td/td', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(false);
+
+    var utils = new window.__Utils(new importContext());
+    var response = await utils.checkDestinationBody('https://www.target.com/p/modern-wood-and-velour-dining-chair-green-zm-home/-/A-16577asdfs319', '(//div[@class[contains(., "ProductNotFound")]]) | (//p[contains(./text(), "we\'re sorry")])', {
+      mode: 'no-cors'
+    });
+    expect(response).to.equal(true);
   });
 });

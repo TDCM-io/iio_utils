@@ -136,6 +136,10 @@
                 status: "FAILURE",
                 message: "Invalid state. Must consist of 2 letters."
             },
+            UNKNOWN_ERROR: {
+                status: "FAILURE",
+                message: "Extraction failed for an unknown reason."
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
@@ -365,7 +369,9 @@
             return new Promise(resolve => setTimeout(resolve, timeout));
         }
 
-        async safeRedirect(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
+        async safeRedirect(URL, fetchOptions = {
+            'credentials': 'include'
+        }, authObjId = 'AUTH_SUCCESS') {
             var isOk = false;
 
             await fetch(URL, fetchOptions)
@@ -379,26 +385,40 @@
             window.location.replace(URL);
         }
 
-        async fetchHTMLBody(URL, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
+        async fetchHTMLBody(URL, fetchOptions = {
+            'credentials': 'include'
+        }, authObjId = 'AUTH_SUCCESS') {
             let parser = new DOMParser();
             let isOk = true;
 
-            var text = await fetch(URL, fetchOptions).then(response => response.text()).catch(reason => {
-                isOk = false;
-            });
+            var text = await fetch(URL, fetchOptions)
+                .then(response => response.text())
+                .catch(reason => {
+                    isOk = false;
+                });
+
             if (isOk)
                 return parser.parseFromString(text, 'text/html');
             else
                 return this.endEx(authObjId, 'INVALID_URL');
         }
 
-        async checkDestinationBody(URL, xpath, fetchOptions = {'credentials': 'include'}, authObjId = 'AUTH_SUCCESS') {
-            var doc = await this.fetchHTMLBody(URL, fetchOptions);
-            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE); // returns a list of nodes
+        async checkDestinationBody(URL, xpath, fetchOptions = {
+            'credentials': 'include',
+            'mode': 'no-cors'
+        }) {
 
-            if (test.length != 0) {
-                return this.endEx(authObjId, 'INVALID_URL');
-            }
+            var parser = new DOMParser();
+            var text = await fetch(URL, fetchOptions)
+                .then(response => response.text())
+                .catch(x => {
+                    return "";
+                });
+
+            var doc = parser.parseFromString(text, 'text/html');//.window.document;
+
+            var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            return !!test;
         }
     }
 })();
