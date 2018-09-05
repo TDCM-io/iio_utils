@@ -61,7 +61,7 @@ describe('utils.js', function () {
     });
 
     utils = new window.__Utils(new importContext());
-    // return both only authentication failure
+    // return both authentication and failure message with custom auth message
     expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({
       auth_status: "FAILURE",
       auth_message: 'Failure message',
@@ -70,7 +70,7 @@ describe('utils.js', function () {
     });
 
     utils = new window.__Utils(new importContext(), 'NEG 3.1.1.');
-    // return both only authentication failure (NEG 3.1.1)
+    // return only authentication failure message (NEG 3.1.1)
     expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({
       auth_status: "FAILURE",
       auth_message: 'Failure message'
