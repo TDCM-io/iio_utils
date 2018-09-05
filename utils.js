@@ -372,12 +372,9 @@
         async safeRedirect(URL, fetchOptions = {
             'credentials': 'include'
         }, authObjId = 'AUTH_SUCCESS') {
-            var isOk = false;
-
-            await fetch(URL, fetchOptions)
-                .then(function (response) {
-                    isOk = response.ok;
-                }).catch(reason => {});
+            let isOk = await fetch(URL, fetchOptions)
+                .then(response => response.ok)
+                .catch(() => false);
 
             if (!isOk) {
                 return this.endEx(authObjId, 'INVALID_URL');
@@ -393,7 +390,7 @@
 
             var text = await fetch(URL, fetchOptions)
                 .then(response => response.text())
-                .catch(reason => {
+                .catch(() => {
                     isOk = false;
                 });
 
@@ -411,11 +408,11 @@
             var parser = new DOMParser();
             var text = await fetch(URL, fetchOptions)
                 .then(response => response.text())
-                .catch(x => {
+                .catch(() => {
                     return "";
                 });
 
-            var doc = parser.parseFromString(text, 'text/html');//.window.document;
+            var doc = parser.parseFromString(text, 'text/html');
 
             var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             return !!test;
