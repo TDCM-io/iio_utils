@@ -144,6 +144,10 @@
                 status: "FAILURE",
                 message: "Product was not added to cart for an unknown reason."
             },
+            CART_NOT_EMPTY: {
+                status: "FAILURE",
+                message: "Shopping cart is not empty."
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
