@@ -86,6 +86,13 @@ describe('utils.js', function () {
     });
 
     utils = new window.__Utils(new importContext());
+    // return only auth message
+    expect(utils.endEx('AUTH_UNKNOWN')).to.deep.equal({
+      auth_status: "UNKNOWN",
+      auth_message: " "
+    });
+
+    utils = new window.__Utils(new importContext());
     // return only failure message (no auth)
     expect(utils.endEx(null, 'INVALID_URL')).to.deep.equal({
       status: "FAILURE",
@@ -204,5 +211,71 @@ describe('utils.js', function () {
       mode: 'no-cors'
     });
     expect(response).to.equal(true);
+  });
+
+  it('mergeExtractions() works', () => {
+    var utils = new window.__Utils(new importContext());
+
+    var obj1 = {
+      "name": [{
+        "text": "John Kowalski" // in 1, not in 2
+      }],
+      "address": [{
+        "text": " " // in 2, not in 1
+      }],
+      "zip": [{
+        "text": "1111" // newer in 2
+      }],
+      "price": [{
+        "text": "$12" // not existing in 2
+      }]
+    };
+
+    var obj2 = {
+      "name": [{
+        "text": " "
+      }],
+      "address": [{
+        "text": "Chicago"
+      }],
+      "zip": [{
+        "text": "2222"
+      }],
+      "quantity": [{ // not in 1
+          "text": "0"
+        },
+        {
+          "text": "1"
+        },
+        {
+          "text": "2"
+        }
+      ]
+    };
+
+    expect(utils.mergeExtractions(obj1, obj2)).to.deep.equal({
+      "name": [{
+        "text": "John Kowalski"
+      }],
+      "address": [{
+        "text": "Chicago"
+      }],
+      "zip": [{
+        "text": "2222"
+      }],
+      "price": [{
+        "text": "$12"
+      }],
+      "quantity": [{
+        "text": "0"
+      },
+      {
+        "text": "1"
+      },
+      {
+        "text": "2"
+      }
+    ]
+    });
   });
 });

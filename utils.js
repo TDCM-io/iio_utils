@@ -425,5 +425,27 @@
             var test = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             return !!test;
         }
+
+        mergeExtractions(obj1, obj2) {
+            var newData = {};
+            for (let property in obj1) {
+                if (property in obj2) {
+                    if ((obj1[property] == obj2[property]) || (obj2[property][0].text == " ") || (obj2[property].length == 0)) {
+                        newData[property] = obj1[property];
+                    } else {
+                        newData[property] = obj2[property];
+                    }
+                } else {
+                    newData[property] = obj1[property];
+                }
+            }
+
+            for (let property in obj2) {
+                if (!(property in obj1) && (obj2[property].length > 0)) {
+                    newData[property] = obj2[property];
+                }
+            }
+            return newData;
+        }
     }
 })();
