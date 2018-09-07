@@ -144,6 +144,10 @@
                 status: "FAILURE",
                 message: "Product was not added to cart for an unknown reason."
             },
+            BLANK_FAILURE: {
+                status: "FAILURE",
+                message: " "
+            },
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
