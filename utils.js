@@ -120,6 +120,10 @@
                 status: "FAILURE",
                 message: "Invalid timeframe."
             },
+            INVALID_ORDER_NUMBER: {
+                status: "FAILURE",
+                message: "Invalid order number."
+            },
             INPUT_MISSING: {
                 status: "FAILURE",
                 message: "Required input missing."
