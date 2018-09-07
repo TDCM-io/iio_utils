@@ -90,7 +90,7 @@
             },
             CART_NOT_EMPTY: {
                 status: "FAILURE",
-                message: "Failed to empty shopping cart."
+                message: "Shopping cart is not empty."
             },
             PRODUCT_NOT_AVAILABLE_FOR_SHIPPING: {
                 status: "FAILURE",
@@ -143,10 +143,6 @@
             PRODUCT_NOT_ADDED_TO_CART: {
                 status: "FAILURE",
                 message: "Product was not added to cart for an unknown reason."
-            },
-            CART_NOT_EMPTY: {
-                status: "FAILURE",
-                message: "Shopping cart is not empty."
             },
         },
         COLUMNS_SET_1 = {
