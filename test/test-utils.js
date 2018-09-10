@@ -62,7 +62,6 @@ describe('utils.js', function () {
       message: "URL is invalid."
     });
 
-    utils = new window.__Utils(new importContext());
     // return both authentication and failure message with custom auth message
     expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({
       auth_status: "FAILURE",
@@ -85,14 +84,12 @@ describe('utils.js', function () {
       auth_message: " "
     });
 
-    utils = new window.__Utils(new importContext());
     // return only auth message
     expect(utils.endEx('AUTH_UNKNOWN')).to.deep.equal({
       auth_status: "UNKNOWN",
       auth_message: " "
     });
 
-    utils = new window.__Utils(new importContext());
     // return only failure message (no auth)
     expect(utils.endEx(null, 'INVALID_URL')).to.deep.equal({
       status: "FAILURE",
@@ -103,7 +100,6 @@ describe('utils.js', function () {
     const temp = console.log;
     console.log = (x => x);
 
-    utils = new window.__Utils(new importContext());
     // handle invalid ObjectIds
     expect(utils.endEx(null, null)).to.equal('authObjId or statusObjId do not match any known status.');
     expect(utils.endEx('InvalidObjId', 'INVALID_URL')).to.equal('authObjId or statusObjId do not match any known status.');
@@ -164,10 +160,10 @@ describe('utils.js', function () {
     expect(response).to.not.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
 
     // check invalid URL (code: 404)
-    var response = await utils.safeRedirect('https://www.target.com/p/coleman--174--quickpump-120v-pump/-/A-11115253invalid', {
+    response = await utils.safeRedirect('https://www.target.com/p/coleman--174--quickpump-120v-pump/-/A-11115253invalid', {
       mode: 'no-cors'
     });
-    expect(response).to.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
+    expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
 
   it('fetchHTMLBody() works', async () => {
@@ -181,33 +177,34 @@ describe('utils.js', function () {
     expect(response.querySelector('form[action="/search"]')).to.not.equal(null);
 
     // check invalid HTML (code: 404)
-    var response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
+    response = await utils.fetchHTMLBody('https://www.asdfasd314sf.io', {
       mode: 'no-cors'
     });
     expect(response).to.deep.equal(utils.endEx('AUTH_SUCCESS', 'INVALID_URL'));
   });
 
   it('checkDestinationBody() works', async () => {
+    // page loads, xpath doesn't exist
     var utils = new window.__Utils(new importContext());
     var response = await utils.checkDestinationBody('https://www.google.com', '//div[@class="asdf"]/td/td', {
       mode: 'no-cors'
     });
     expect(response).to.equal(false);
 
-    var utils = new window.__Utils(new importContext());
-    var response = await utils.checkDestinationBody('https://www.google.com', '//div', {
+    // page loads, xpath exists
+    response = await utils.checkDestinationBody('https://www.google.com', '//div', {
       mode: 'no-cors'
     });
     expect(response).to.equal(true);
 
-    var utils = new window.__Utils(new importContext());
-    var response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div/a/td/td', {
+    // page doesn't exist
+    response = await utils.checkDestinationBody('https://www.asdfasd314sf.io', '//div/a/td/td', {
       mode: 'no-cors'
     });
     expect(response).to.equal(false);
 
-    var utils = new window.__Utils(new importContext());
-    var response = await utils.checkDestinationBody('https://www.target.com/p/modern-wood-and-velour-dining-chair-green-zm-home/-/A-16577asdfs319', '(//div[@class[contains(., "ProductNotFound")]]) | (//p[contains(./text(), "we\'re sorry")])', {
+    // page exists (404 handled by Target), xpath exists
+    response = await utils.checkDestinationBody('https://www.target.com/p/modern-wood-and-velour-dining-chair-green-zm-home/-/A-16577asdfs319', '(//div[@class[contains(., "ProductNotFound")]]) | (//p[contains(./text(), "we\'re sorry")])', {
       mode: 'no-cors'
     });
     expect(response).to.equal(true);

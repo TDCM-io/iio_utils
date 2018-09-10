@@ -350,7 +350,7 @@
                         auth_message: authFailedMsg
                     };
                 }
-                returnData = Object.assign(_columns, returnData);
+                returnData = {..._columns, ...returnData};
                 this.memory.returnData = this.createData(returnData);
                 return (_this.returnData = this.return(this.memory.returnData));
             }.bind(jsActionContext);
