@@ -326,7 +326,7 @@
             this.loaded = true;
             this.$ = (window.jQuery || _noConflictHandler).noConflict();
 
-            this.endEx = function (authObjId, statusObjId, authFailedMsg) {
+            this.endEx = function (authObjId, statusObjId, authFailedMsg, customMsg) {
                 let returnData;
 
                 if (!authFailedMsg) {
@@ -337,6 +337,13 @@
                         return console.log("authObjId or statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
+                } else if(customMsg) {
+                    returnData = {
+                        auth_status: "SUCCESS",
+                        auth_message: " ",
+                        status: "FAILURE",
+                        message: customMsg
+                    };
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
                         auth_status: "FAILURE",
