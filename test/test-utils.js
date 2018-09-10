@@ -70,6 +70,22 @@ describe('utils.js', function () {
       message: " "
     });
 
+    // return custom failure message
+    expect(utils.endEx(null, null, null, 'Failure message')).to.deep.equal({
+      auth_status: "SUCCESS",
+      auth_message: ' ',
+      status: "FAILURE",
+      message: "Failure message"
+    });
+
+    // return custom failure and auth message
+    expect(utils.endEx(null, null, 'Custom auth message', 'Custom failure message')).to.deep.equal({
+      auth_status: "FAILURE",
+      auth_message: 'Custom auth message',
+      status: "FAILURE",
+      message: "Custom failure message"
+    });
+
     utils = new window.__Utils(new importContext(), 'NEG 3.1.1.');
     // return only authentication failure message (NEG 3.1.1)
     expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({

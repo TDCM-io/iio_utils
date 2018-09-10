@@ -329,7 +329,14 @@
             this.endEx = function (authObjId, statusObjId, authFailedMsg, customMsg) {
                 let returnData;
 
-                if (!authFailedMsg) {
+                if (customMsg) {
+                    returnData = {
+                        auth_status: (!!authFailedMsg) ? "FAILURE" : "SUCCESS",
+                        auth_message: authFailedMsg || " ",
+                        status: "FAILURE",
+                        message: customMsg
+                    };
+                } else if (!authFailedMsg) {
                     let authObj = (typeof authObjId === 'string') ? STATUS[authObjId] : {};
                     let statusObj = (typeof statusObjId === 'string') ? STATUS[statusObjId] : {};
 
@@ -337,13 +344,6 @@
                         return console.log("authObjId or statusObjId do not match any known status.");
 
                     returnData = Object.assign(authObj, statusObj);
-                } else if(customMsg) {
-                    returnData = {
-                        auth_status: "SUCCESS",
-                        auth_message: " ",
-                        status: "FAILURE",
-                        message: customMsg
-                    };
                 } else if (columnsKey !== "NEG 3.1.1.") {
                     returnData = {
                         auth_status: "FAILURE",
@@ -357,7 +357,9 @@
                         auth_message: authFailedMsg
                     };
                 }
-                returnData = {..._columns, ...returnData};
+                returnData = { ..._columns,
+                    ...returnData
+                };
                 this.memory.returnData = this.createData(returnData);
                 return (_this.returnData = this.return(this.memory.returnData));
             }.bind(jsActionContext);
