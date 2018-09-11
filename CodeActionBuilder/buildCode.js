@@ -1,50 +1,41 @@
-var fs = require('fs');
-const  ncp = require("copy-paste");
+var ncp = require("copy-paste");
+var requireDir = require('require-dir');
 
 if (process.argv.length <= 2) {
-    console.log("Usage: " + __filename + " path/to/directory there is no second parameter");
-    process.exit(-1);
+  console.log("Usage: " + __filename + " path/to/directory there is no second parameter");
+  process.exit(-1);
 }
 
-var requireDir = require('require-dir');
 var dir = requireDir(process.argv[2]);
 
-const config = dir.config;
-const url = config.loginUrl;
-const url1 = config.siteUrl;
+const loginUrl = dir.config.loginUrl;
+const siteUrl = dir.config.siteUrl;
 
-const fnstr1 = `module.exports = ${dir.interactions.toString()}`;
-const fnstr2 = `module.exports = ${dir.authInteractions.toString()}`;
+const interactions = `module.exports = ${dir.interactions.toString()}`;
+const authInteractions = `module.exports = ${dir.authInteractions.toString()}`;
 
-var jsonText= JSON.stringify({
-    'extractionConfigs': {
+var jsonText = JSON.stringify({
+  'extractionConfigs': {},
+  'authInteractions': [{
+      'constructor': 'GotoAction',
+      'url': loginUrl,
     },
-    'authInteractions': [
-      {
-        'constructor': 'GotoAction',
-        'url': url,
-      },
-      {
-        'constructor': 'CodeAction',
-        'code': fnstr2,
-        
-      },
-    ],
-    'interactions': [
-      {
-        'constructor': 'GotoAction',
-        'url': url1,        
-      },
-      {
-        'constructor': 'CodeAction',
-        'code': fnstr1,
-      },
-    ],
-    
-  });
-console.log(jsonText);
+    {
+      'constructor': 'CodeAction',
+      'code': authInteractions,
 
+    },
+  ],
+  'interactions': [{
+      'constructor': 'GotoAction',
+      'url': siteUrl,
+    },
+    {
+      'constructor': 'CodeAction',
+      'code': interactions,
+    },
+  ],
 
- 
-ncp.copy(jsonText, function () {})
+});
 
+ncp.copy(jsonText, () => {})
