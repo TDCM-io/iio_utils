@@ -142,7 +142,7 @@
             },
             INVALID_CITY: {
                 status: "FAILURE",
-                message: "Invalid state. Must consist of letters only."
+                message: "Invalid city. Must consist of letters only."
             },
             UNKNOWN_ERROR: {
                 status: "FAILURE",
