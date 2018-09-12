@@ -140,6 +140,10 @@
                 status: "FAILURE",
                 message: "Invalid state. Must consist of 2 letters."
             },
+            INVALID_CITY: {
+                status: "FAILURE",
+                message: "Invalid state. Must consist of letters only."
+            },
             UNKNOWN_ERROR: {
                 status: "FAILURE",
                 message: "Extraction failed for an unknown reason."
