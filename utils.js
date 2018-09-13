@@ -8,6 +8,10 @@
                 auth_status: "2FA",
                 auth_message: " "
             },
+            AUTH_CAPTCHA: {
+                auth_status: "FAILURE",
+                auth_message: "Extractor could not solve captcha."
+            },
             AUTH_UNKNOWN: {
                 auth_status: "UNKNOWN",
                 auth_message: " "
