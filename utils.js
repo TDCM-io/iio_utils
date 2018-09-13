@@ -56,6 +56,10 @@
                 status: "FAILURE",
                 message: "The quantity provided would exceed the maximum quantity allowed in the cart."
             },
+            MAX_NUMBER_OF_ADDRESSES_REACHED: {
+                status: "FAILURE",
+                message: "The maximum number of shipping addresses has been reached."
+            },
             LOGIN_DELIVERY_ZIP_MISMATCH: {
                 status: "FAILURE",
                 message: "Zip provided during login is different than the zip used in shipping address. This is not allowed."
