@@ -164,6 +164,10 @@
                 status: "FAILURE",
                 message: " "
             },
+            MEMBER_NOT_FOUND: {
+                status: "FAILURE",
+                message: "Member search failed to find a member with provided inputs."
+            }
         },
         COLUMNS_SET_1 = {
             status: "SUCCESS",
@@ -320,6 +324,26 @@
                 total: 0,
                 estimated_delivery_date: " ",
                 order_number: " "
+            },
+            "EYE 3.1.1.": {
+                status: "SUCCESS",
+                message: " ",
+                provider: " ",
+                frame_amount: 0,
+                frame_is_percent: false,
+                frame_base_amount: 0,
+                frame_level: " ",
+                frame_copay: " ",
+                lenses_description: " ",
+                lenses_is_percent: " ",
+                lenses_base_amount: 0,
+                lenses_level: " ",
+                lens_options_description: " ",
+                lens_options_amount: 0,
+                lens_options_is_percent: " ",
+                lens_options_base_amount: 0,
+                lens_options_level: " ",
+                lens_options_co_pay: 0
             }
         }
 
