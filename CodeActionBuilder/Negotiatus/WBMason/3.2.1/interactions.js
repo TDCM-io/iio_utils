@@ -94,8 +94,21 @@ module.exports = async function (input) {
     });
     await extractorContext.click('#ctl00_ContentPlaceholder1_OrderHistory1_lnkFiltersSubmit');
     await extractorContext.waitForPage();
-    await delay(20000);
-do {
+    await delay(3000);
+    for (let index = 0; index < 10; index++) {
+       var info = await extractorContext.execute(function () {
+        return document.querySelector(".loading-order-history").getAttribute("style");
+       });
+       if(info == "display: none;")
+       {
+       break;
+       }
+       else{
+           await delay(5000);
+       }
+        
+    }
+    
     
     await extractorContext.waitForPage();
     await extractorContext.execute(function () {
@@ -108,7 +121,8 @@ do {
     console.log("Page number" + extractorContext.memory.pageNumber);
 
     if (extractorContext.memory.pageNumber > 0) {
-        for (var i = 1; i <= extractorContext.memory.pageNumber+1; i++) {
+        for (var i = 1; i <= 100; i++) {
+            await extractorContext.waitForPage();
             console.log("Inside if block");
             await extractorContext.execute(function () {
                 var pageNumbersContainer = document.querySelector('#ctl00_ContentPlaceholder1_OrderHistory1_OrderHistoryGridView > tbody > tr:last-child > td');
@@ -136,6 +150,7 @@ do {
 
 
             });
+            await extractorContext.waitForPage();
             await extractorContext.execute(function () {
                 var records = document.querySelectorAll(".order-number a");
                 for (i = 0; i < records.length; i++) {
@@ -147,10 +162,12 @@ do {
                 await extractorContext.click("#io-next-page");
                 await extractorContext.waitForPage();
             }
+            else{break;}
 
 
         }
     } else {
+        await extractorContext.waitForPage();
         console.log("Inside else block");
         await extractorContext.execute(function () {
             var records = document.querySelectorAll(".order-number a");
@@ -159,13 +176,11 @@ do {
             }
         });
     }
-    var nextPageElement = document.querySelector('ctl00_ContentPlaceholder1_OrderHistory1_OrderHistoryGridView_ctl18_Next10');
-} while (nextPageElement);
+
 
 
     await extractorContext.execute(function () {
         var table = this.memory.tempArray;
-        var url = "https://www.wbmason.com/ReturnCenter.aspx#/details?SID="
 
         let body = document.body,
             tbl = document.createElement('table');
@@ -178,12 +193,8 @@ do {
             td1.setAttribute("id", "order_number");
             td1.appendChild(document.createTextNode(table[i]));
 
-            let td2 = document.createElement('td');
-            td2.setAttribute("id", "order_url");
-            td2.appendChild(document.createTextNode(url + table[i]));
-
             tr.appendChild(td1);
-            tr.appendChild(td2);
+           
             tblBody.appendChild(tr);
         }
         tbl.appendChild(tblBody);
@@ -222,14 +233,7 @@ do {
                 "defaultValue": " ",
                 "ranking": 0
             },
-            {
-                "id": "a81db422-185d-4842-a44a-0c30220ba358",
-                "name": "order_url",
-                "type": "AUTO",
-                "xpath": "//td[@id='order_url']",
-                "defaultValue": " ",
-                "ranking": 0
-            },
+           
             {
                 "id": "d0d1945e-56ca-4d02-b670-36e051aea5f6",
                 "name": "status",
@@ -272,6 +276,7 @@ do {
         "noscript": true,
         "screenCapture": true
     });
+    
 
     return extractorContext.return(data);
 

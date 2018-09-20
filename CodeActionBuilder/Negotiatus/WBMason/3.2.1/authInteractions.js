@@ -1,22 +1,14 @@
 module.exports = async function (input) {
   
 
-  console.log('extractor input', input);
+ 
   console.log("auth interactions");
-  console.log('extractor input', input);
-  const lastResponseData = await extractorContext.goto({
-    url: 'https://wbmason.com/Login2.aspx',
-    options: {},
-  });
-
+  
   function delay(timeout) {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
-  console.log('finished goto', lastResponseData);
-
-
-  console.log('finished waiting for page');
+ console.log('finished waiting for page');
 
   await extractorContext.waitForPage();
   await extractorContext.input({
@@ -49,7 +41,7 @@ module.exports = async function (input) {
   });
 
   console.log('finished input password');
-  await delay(2000);
+  await delay(3000);
   await extractorContext.click({
     "constructor": "MouseEvent",
     "target": {
@@ -73,8 +65,7 @@ module.exports = async function (input) {
     }
   });
   console.log('finished button click');
-  await delay(10000);
-  //await extractorContext.goto("https://www.wbmason.com/SelectAccount.aspx");
+  
   await extractorContext.waitForPage();
   console.log('Set error message if exist');
   await extractorContext.execute(function () {
@@ -84,7 +75,7 @@ module.exports = async function (input) {
       this.memory.auth_message = errorMsg;
     }
   });
-  await delay(3000);
+ 
   console.log('Set status');
   await extractorContext.waitForPage();
   await extractorContext.execute(function () {
@@ -115,11 +106,11 @@ module.exports = async function (input) {
   {
     return extractorContext.reportBlocked(result.code, 'Incorrect status code'); 
   }
-  await delay(5000);
+  
   try {
     await extractorContext.click("#ctl00_lnkLoginAction1");
   } catch (error) {
-    //return ;
+   return ;
   }
   if(extractorContext.memory.auth_status != 'SUCCESS')
   {
@@ -127,7 +118,7 @@ module.exports = async function (input) {
   }
   
   console.log('Find secoundary login info element');
-  await delay(5000);
+ 
   await extractorContext.waitForPage();
   var columnID = await extractorContext.execute(function () {
     try {
@@ -169,7 +160,7 @@ module.exports = async function (input) {
 
   
   console.log('Column id: '+ columnID);
-  await delay(3000);
+  //await delay(3000);
 
   console.log("click link");
   try {
