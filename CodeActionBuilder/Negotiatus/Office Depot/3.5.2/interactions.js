@@ -78,10 +78,93 @@ module.exports = async function (input) {
         continueButton.click();
     });
     await extractorContext.waitForPage();
-    await extractorContext.execute(function () {
+    await extractorContext.execute(async function () {
         var zip = document.querySelector('#postalCode1-2');
-        zip = this.input.zip;
-        //to be continued
+        zip.value = this.input.zip;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        var error = document.querySelector('.error');
+        if (error) {
+            // return this.return(this.createData({
+            //     'status': 'FAILURE',
+            //     'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
+            // }));
+        }
+        var selectOtherCityAndState = document.querySelector('select#checkoutCityAndState');
+        if (selectOtherCityAndState.innerHTML) {
+
+        }
+
+        var fullName = this.input.name.split(' ');
+        var firstName = document.querySelector('[id*="firstName"]');
+        var lastName = document.querySelector('[id*="lastName"]');
+        var address = document.querySelector('[id*="address1"]');
+        var address_2 = document.querySelector('[id*="address2"]');
+        var phone1 = document.querySelector('[id*="phoneNumber1"]');
+        var phone2 = document.querySelector('[id*="phoneNumber2"]');
+        var phone3 = document.querySelector('[id*="phoneNumber3"]');
+        firstName.value = fullName[0];
+        lastName.value = fullName[1];
+
+        // submit
+        const contbtn = document.getElementById('confirm2');
+        if (contbtn) {
+            contbtn.click();
+            return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        // check for 'The following address you entered is not recognized by our database' message
+        const popup = document.getElementById('continue');
+        if (popup) {
+            // return this.return(this.createData({
+            //         'status': 'FAILURE',
+            //         'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
+            // }));
+        }
+        var warning = document.querySelector('div#skipGroupOne');
+        if (warning) {
+            // return this.return(this.createData({
+            //     'status': 'FAILURE',
+            //     'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
+            // }));
+        }
+
+        const firstNameError = document.getElementById('firstName-2-error');
+        const lastNameError = document.getElementById('lastName-2-error');
+        const addressError = document.getElementById('address1-2-error');
+        const address2Error = document.getElementById('address2-2-error');
+        const zipError = document.getElementById('postalCode1-2-error');
+        const phoneError = document.getElementById('phoneGroup-2-error');
+        const emailError = document.getElementById('email-2-error');
+        
+        if (firstNameError || lastNameError || addressError || address2Error || zipError || phoneError || emailError) {
+            // return this.return(this.createData({
+            //         'status': 'FAILURE',
+            //         'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
+            // }));
+        }
+
+        var shipCostTr = document.querySelector('td[data-auid="orderSummary_value_delivery"]');
+        if (shipCostTr) {
+        if (shipCostTr.innerText === 'Enter Address') {
+            // return this.return(this.createData({
+            //     'status': 'FAILURE',
+            //     'message': 'Provided address is invalid.'
+            // }));
+        }
+        var shipCostTxt = shipCostTr.textContent.replace(/\$|\,/, '').replace(/\s/,'');
+        var shipCost = 0;
+        if (shipCostTxt.match(/free/i) === null) {
+            shipCost = parseFloat(shipCostTxt);
+            if (shipCost > maxShipping) {
+                // return this.return(this.createData({
+                //     'status': 'FAILURE',
+                //     'message': 'Actual shipping cost exceeded the maximum specified.'
+                // }));
+            }
+            this.memory.extractedData[0]['group'][0]['shipping']  = [{'text': '$'+shipCost.toString()}];
+        }
+        
+        }
     });
 
 
