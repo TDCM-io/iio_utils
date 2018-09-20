@@ -12,30 +12,43 @@ const loginUrl = dir.config.loginUrl;
 const siteUrl = dir.config.siteUrl;
 
 const interactions = `module.exports = ${dir.interactions.toString()}`;
-const authInteractions = `module.exports = ${dir.authInteractions.toString()}`;
 
-var jsonText = JSON.stringify({
-  'extractionConfigs': {},
-  'authInteractions': [{
-      'constructor': 'GotoAction',
-      'url': loginUrl,
-    },
-    {
-      'constructor': 'CodeAction',
-      'code': authInteractions,
+if (loginUrl) {
+  const authInteractions = `module.exports = ${dir.authInteractions.toString()}`;
 
-    },
-  ],
-  'interactions': [{
-      'constructor': 'GotoAction',
-      'url': siteUrl,
-    },
-    {
-      'constructor': 'CodeAction',
-      'code': interactions,
-    },
-  ],
-
-});
-
+  var jsonText = JSON.stringify({
+    'extractionConfigs': {},
+    'authInteractions': [{
+        'constructor': 'GotoAction',
+        'url': loginUrl
+      },
+      {
+        'constructor': 'CodeAction',
+        'code': authInteractions
+      }
+    ],
+    'interactions': [{
+        'constructor': 'GotoAction',
+        'url': siteUrl
+      },
+      {
+        'constructor': 'CodeAction',
+        'code': interactions
+      }
+    ]
+  });
+} else {
+  var jsonText = JSON.stringify({
+    'extractionConfigs': {},
+    'interactions': [{
+        'constructor': 'GotoAction',
+        'url': siteUrl
+      },
+      {
+        'constructor': 'CodeAction',
+        'code': interactions
+      }
+    ]
+  });
+}
 ncp.copy(jsonText, () => {})
