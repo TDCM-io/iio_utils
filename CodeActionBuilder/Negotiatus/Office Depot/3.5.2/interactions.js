@@ -14,8 +14,7 @@ module.exports = async function (input) {
     // }
     console.log('x');
     var products, urlQuantities;
-    console.log('time 1', new Date().getTime());
-    await extractorContext.execute(function () {
+    await extractorContext.execute(async function () {
         console.log("1");
         if (!this.input.products) {
             // return with message 'Urls and quantities were not recieved.'
@@ -26,9 +25,8 @@ module.exports = async function (input) {
         products = this.input.products;
         console.log('products input', this.input.products);
 
-        new Promise(resolve => setTimeout(resolve, 10000));
+        // await new Promise(resolve => setTimeout(resolve, 5000));
     });
-    console.log('time 2', new Date().getTime());
 
     console.log('products:', products);
     console.log('urlQuantities:', urlQuantities);
