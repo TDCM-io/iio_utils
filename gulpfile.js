@@ -10,8 +10,3 @@ gulp.task('test', function () {
       timeout: 5000
     }));
 });
-
-gulp.task('deploy', function () {
-  return gulp.src('./lib/utils.js')
-    .pipe(gulp.dest('./public/'));
-})
