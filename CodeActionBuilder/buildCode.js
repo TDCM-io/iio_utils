@@ -20,7 +20,13 @@ if (loginUrl) {
     'extractionConfigs': {},
     'authInteractions': [{
         'constructor': 'GotoAction',
-        'url': loginUrl
+        'url': loginUrl,
+        'options': {
+          'externalScripts': [
+            'https://tdcmioiio.herokuapp.com/utils.js',
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
+          ]
+        }
       },
       {
         'constructor': 'CodeAction',
@@ -29,7 +35,13 @@ if (loginUrl) {
     ],
     'interactions': [{
         'constructor': 'GotoAction',
-        'url': siteUrl
+        'url': siteUrl,
+        'options': {
+          'externalScripts': [
+            'https://tdcmioiio.herokuapp.com/utils.js',
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
+          ]
+        }
       },
       {
         'constructor': 'CodeAction',
@@ -42,7 +54,13 @@ if (loginUrl) {
     'extractionConfigs': {},
     'interactions': [{
         'constructor': 'GotoAction',
-        'url': siteUrl
+        'url': siteUrl,
+        'options': {
+          'externalScripts': [
+            'https://tdcmioiio.herokuapp.com/utils.js',
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
+          ]
+        }
       },
       {
         'constructor': 'CodeAction',
