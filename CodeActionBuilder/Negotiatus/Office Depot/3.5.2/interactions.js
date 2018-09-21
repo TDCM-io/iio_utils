@@ -12,31 +12,38 @@ module.exports = async function (input) {
     //         lastResponseData
     //     };
     // }
-    console.log('x');
-    var products, urlQuantities;
-    await extractorContext.execute(async function () {
-        console.log("1");
+    console.log('log outside execute');
+    var response = await extractorContext.execute(async function () {
+        const utils = new window.__Utils(this, "NEG 3.5.2.");
+        console.log('log inside execute');
         if (!this.input.products) {
-            // return with message 'Urls and quantities were not recieved.'
+            return utils.endEx(null, null, null, 'No product url inputs');
         }
         this.memory.products = this.input.products;
         this.memory.urlQuantities = this.input.products.length;
-        urlQuantities = this.input.products.length;
-        products = this.input.products;
+        this.memory.urls = [];
+        for (let i = 0; i < this.input.products.length; i++) {
+            this.memory.urls.push(this.input.products[i].quantity);
+        }
         console.log('products input', this.input.products);
 
         // await new Promise(resolve => setTimeout(resolve, 5000));
+        return null;
     });
+    if (response) {
+        return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+    }
 
-    console.log('products:', products);
-    console.log('urlQuantities:', urlQuantities);
     console.log('extractor memory', extractorContext.memory);
     products = extractorContext.memory.products;
+
     for (let i = 0; i < products.length; i++) {
         await extractorContext.goto(products[i].url);
         await extractorContext.waitForPage();
+
         let quantity = products[i].quantity;
-        await extractorContext.execute(function (quantity) {
+        
+        await extractorContext.execute(async function () {
             var oneTimeDelivery = document.querySelector('#radioOneTimeDelivery');
             if (oneTimeDelivery) {
                 oneTimeDelivery.click();
@@ -48,46 +55,48 @@ module.exports = async function (input) {
             var addToCart = document.querySelector('#addToCartButtonId');
             addToCart.click();
             // wait a bit
-        });
+        }, quantity);
         console.log('page', products[i].url)
     }
 
     await extractorContext.goto('https://www.officedepot.com/cart/shoppingCart.do');
     await extractorContext.waitForPage();
-    await extractorContext.execute(function () {
+
+    response = await extractorContext.execute(function () {
+        const utils = new window.__Utils(this, "NEG 3.5.2.");
         const close = document.getElementsByClassName('ss_close')[0];
         if (close) {
             close.click();
         }
         var emptyCart = document.querySelector('#cartEmptyMessage');
         if (emptyCart) {
-            const data = extractorContext.createData({
-                'auth_status': extractorContext.memory.auth_status,
-                'auth_message': extractorContext.memory.auth_message,
-                'status': 'FAILURE',
-                'message': 'Shopping cart contains no items.'
-            });
-            return extractorContext.return(data);
+            return utils.endEx(null, 'CART_EMPTY');
         }
         var checkoutButton = document.querySelector('[data-auid="cart_button_ContinueTop"]');
         checkoutButton.click();
+        return null;
     });
+    if (response) {
+        return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+    }
+
     await extractorContext.waitForPage();
+
     await extractorContext.execute(function () {
         var continueButton = document.querySelector('[class="btn primary fixed_width"]')
         continueButton.click();
     });
+
     await extractorContext.waitForPage();
-    await extractorContext.execute(async function () {
+
+    response = await extractorContext.execute(async function () {
+        const utils = new window.__Utils(this, "NEG 3.5.2.");
         var zip = document.querySelector('#postalCode1-2');
         zip.value = this.input.zip;
         await new Promise(resolve => setTimeout(resolve, 1000));
         var error = document.querySelector('.error');
         if (error) {
-            // return this.return(this.createData({
-            //     'status': 'FAILURE',
-            //     'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
-            // }));
+            return utils.endEx(null, 'ADDRESS_MISSING');
         }
         var selectOtherCityAndState = document.querySelector('select#checkoutCityAndState');
         if (selectOtherCityAndState.innerHTML) {
@@ -102,8 +111,18 @@ module.exports = async function (input) {
         var phone1 = document.querySelector('[id*="phoneNumber1"]');
         var phone2 = document.querySelector('[id*="phoneNumber2"]');
         var phone3 = document.querySelector('[id*="phoneNumber3"]');
+        var email = document.querySelector('[id*="email"]');
         firstName.value = fullName[0];
         lastName.value = fullName[1];
+        address.value = this.input.address;
+        address_2.value = this.input.address_2;
+        phone1.value = this.input.phone.substring(0,3);
+        phone2.value = this.input.phone.substring(3,6);
+        phone3.value = this.input.phone.substring(6,10);
+        email.value = this.input.email;
+
+        receiveSpam = document.querySelector('#guestEmailOptIn');
+        receiveSpam.checked = false;
 
         // submit
         const contbtn = document.getElementById('confirm2');
@@ -113,19 +132,9 @@ module.exports = async function (input) {
         }
         await new Promise(resolve => setTimeout(resolve, 3000));
         // check for 'The following address you entered is not recognized by our database' message
-        const popup = document.getElementById('continue');
-        if (popup) {
-            // return this.return(this.createData({
-            //         'status': 'FAILURE',
-            //         'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
-            // }));
-        }
         var warning = document.querySelector('div#skipGroupOne');
         if (warning) {
-            // return this.return(this.createData({
-            //     'status': 'FAILURE',
-            //     'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
-            // }));
+            return utils.endEx(null, 'ADDRESS_MISSING');
         }
 
         const firstNameError = document.getElementById('firstName-2-error');
@@ -137,35 +146,66 @@ module.exports = async function (input) {
         const emailError = document.getElementById('email-2-error');
         
         if (firstNameError || lastNameError || addressError || address2Error || zipError || phoneError || emailError) {
-            // return this.return(this.createData({
-            //         'status': 'FAILURE',
-            //         'message': 'Provided address doesn\'t exist in the list of shipping addresses.'
-            // }));
+            return utils.endEx(null, 'ADDRESS_MISSING');
         }
 
         var shipCostTr = document.querySelector('td[data-auid="orderSummary_value_delivery"]');
         if (shipCostTr) {
-        if (shipCostTr.innerText === 'Enter Address') {
-            // return this.return(this.createData({
-            //     'status': 'FAILURE',
-            //     'message': 'Provided address is invalid.'
-            // }));
-        }
-        var shipCostTxt = shipCostTr.textContent.replace(/\$|\,/, '').replace(/\s/,'');
-        var shipCost = 0;
-        if (shipCostTxt.match(/free/i) === null) {
-            shipCost = parseFloat(shipCostTxt);
-            if (shipCost > maxShipping) {
-                // return this.return(this.createData({
-                //     'status': 'FAILURE',
-                //     'message': 'Actual shipping cost exceeded the maximum specified.'
-                // }));
+            if (shipCostTr.innerText === 'Enter Address') {
+                return utils.endEx(null, 'ADDRESS_MISSING');
             }
-            this.memory.extractedData[0]['group'][0]['shipping']  = [{'text': '$'+shipCost.toString()}];
+            var shipCostTxt = shipCostTr.textContent.replace(/\$|\,/, '').replace(/\s/,'');
+            var shipCost = 0;
+            if (shipCostTxt.match(/free/i) === null) {
+                shipCost = parseFloat(shipCostTxt);
+                if (shipCost > parseFloat(this.input.max_shipping.replace(/\$|\,/, ''))) {
+                    return utils.endEx(null, 'MAX_SHIPPING_COST_EXCEEDED');
+                }
+                // this.memory.extractedData[0]['group'][0]['shipping']  = [{'text': '$'+shipCost.toString()}];
+            //     this.memory.shipping = '$'+shipCost.toString();
+            // } else {
+            //     this.memory.shipping = shipCostTxt;
+            }
+        }
+        const totalCostTr = document.querySelector('td[data-auid="orderSummary_value_total"]');
+        var totalCostTxt = totalCostTr.textContent.replace(/\$|\,/, '');
+        var totalCost = parseFloat(totalCostTxt);
+        if (totalCost > parseFloat(this.input.max_price.replace(/\$|\,/, ''))) {
+            return utils.endEx(null, 'MAX_TOTAL_EXCEEDED');
         }
         
+        const estDeliv = document.getElementsByClassName('checkout_v2_sidebar_box clearfix');
+        const dateRe = /(\d{2}\/\d{2}\/\d{4})/;
+        const allDeliv = [];
+        if (estDeliv.length > 0) {
+            for (const est of estDeliv) {
+                if (est === estDeliv[0]) continue;
+                const matched = estDeliv[1].innerText.match(dateRe);
+                const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                const firstDate = new Date();
+                const secondDate = new Date(matched[0]);
+                const diffDays = Math.ceil(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+                if (max_days < diffDays) {
+                    return utils.endEx(null, 'MAX_SHIPPING_DAYS_EXCEEDED');
+                }
+            //return this.return(this.createData({'est_del': matched[0]}));
+                const delivery = new Date(matched[0].toString()).getTime()/1000;
+            //console.log(delivery);
+            //return this.return(this.createData({'est_del': delivery}));
+                allDeliv.push({'text': delivery.toString()});//[delivery];
+            //return this.return(this.createData({'est_del': this.memory.extractedData[0]['group'][0]['estimated_delivery_date']}));
+                
+            
+            }
+            // this.memory.extractedData[0]['group'][0]['estimated_delivery_date'] = allDeliv;
+            // return this.return(this.memory.extractedData);
         }
+
+        return null;
     });
+    if (response) {
+        return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+    }
 
 
     console.log('extractor memory', extractorContext.memory);
