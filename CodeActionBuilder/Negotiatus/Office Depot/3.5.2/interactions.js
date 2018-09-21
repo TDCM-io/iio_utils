@@ -36,26 +36,66 @@ module.exports = async function (input) {
 
     console.log('extractor memory', extractorContext.memory);
     products = extractorContext.memory.products;
-
     for (let i = 0; i < products.length; i++) {
         await extractorContext.goto(products[i].url);
+        // TODO check if url is valid
         await extractorContext.waitForPage();
 
-        let quantity = products[i].quantity;
+        // let quantity = products[i].quantity;
+        // let quantity = products[i].quantity.text;
+        let quantity = extractorContext.memory.products[i].quantity;
+        extractorContext.setMemory({...extractorContext.memory, ...{quantity: quantity}});
         
-        await extractorContext.execute(async function () {
+        response = await extractorContext.execute(async function () {
+            const utils = new window.__Utils(this, "NEG 3.5.2.");
+            const shipOnly = document.getElementById('availabilityBlock');
+            if (!shipOnly) {
+                return utils.endEx(null, 'PRODUCT_NOT_AVAILABLE_FOR_SHIPPING');
+            }
+
             var oneTimeDelivery = document.querySelector('#radioOneTimeDelivery');
             if (oneTimeDelivery) {
                 oneTimeDelivery.click();
+                await utils.delay(1000);
             }
             var qty = document.querySelector('#mainqtybox');
-            qty.value = quantity;
+            qty.value = this.memory.quantity;
             // wait a bit
+            // await new Promise(resolve => setTimeout(resolve, 1000));
             // check if given quantity exceeds max
             var addToCart = document.querySelector('#addToCartButtonId');
             addToCart.click();
+            await utils.delay(3000);
             // wait a bit
-        }, quantity);
+            // await new Promise(resolve => setTimeout(resolve, 2000));
+
+            var proceed = document.querySelector('#prelightboxContinueBtn');
+            if (proceed) {
+                proceed.click();
+            }
+            await utils.delay(3000);
+            const temp = document.evaluate("//*[@id=\"multipleStoresModal\"]/h3", document.body, null, XPathResult.ANY_TYPE, null).iterateNext();
+            if (temp) {
+                if (temp.innerText === "Buy Online & Pickup in Store") {
+                    return utils.endEx(null, null, null, 'This product is not available at this time.');
+                }
+            }
+            if (document.getElementById('skuNotAvailable')) {
+                return utils.endEx(null, null, null, 'This product is not available at this time.');
+            }
+            if (document.getElementsByClassName('current-name variant-unselected-error font-bold')[0]) {
+                return utils.endEx(null, null, null, 'Product requires additional details to add to cart.');
+            }
+            var quantityTooHigh = document.querySelector('[data-auid="cart_title_skuStatusMessage"]');
+            if (quantityTooHigh) {
+                return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
+            }
+
+            return null;
+        });
+        if (response) {
+            return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+        }
         console.log('page', products[i].url)
     }
 
@@ -128,7 +168,6 @@ module.exports = async function (input) {
         const contbtn = document.getElementById('confirm2');
         if (contbtn) {
             contbtn.click();
-            return;
         }
         await new Promise(resolve => setTimeout(resolve, 3000));
         // check for 'The following address you entered is not recognized by our database' message
