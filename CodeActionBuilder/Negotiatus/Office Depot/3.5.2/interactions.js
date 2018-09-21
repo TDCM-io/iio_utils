@@ -20,6 +20,7 @@ module.exports = async function (input) {
             return utils.endEx(null, null, null, 'No product url inputs');
         }
         this.memory.products = this.input.products;
+        this.memory.zip = this.input.zip;
         this.memory.urlQuantities = this.input.products.length;
         this.memory.urls = [];
         for (let i = 0; i < this.input.products.length; i++) {
@@ -69,6 +70,7 @@ module.exports = async function (input) {
 
             var addToCart = document.querySelector('#addToCartButtonId');
             await addToCart.click();
+            return null;
         });
         if (response) {
             return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
@@ -76,14 +78,17 @@ module.exports = async function (input) {
 
         await extractorContext.waitForPage();
 
-        response = await extractorContext.execute(async function () {
-            const utils = new window.__Utils(this, "NEG 3.5.2.");
-
+        await extractorContext.execute(async function () {
             var proceed = document.querySelector('#prelightboxContinueBtn');
             if (proceed) {
                 proceed.click();
             }
-            // await utils.delay(3000);
+        });
+
+        await extractorContext.waitForPage();
+
+        response = await extractorContext.execute(async function () {
+            const utils = new window.__Utils(this, "NEG 3.5.2.");
             const temp = document.evaluate("//*[@id=\"multipleStoresModal\"]/h3", document.body, null, XPathResult.ANY_TYPE, null).iterateNext();
             if (temp) {
                 if (temp.innerText === "Buy Online & Pickup in Store") {
@@ -122,8 +127,20 @@ module.exports = async function (input) {
         if (emptyCart) {
             return utils.endEx(null, 'CART_EMPTY');
         }
-        var checkoutButton = document.querySelector('[data-auid="cart_button_ContinueTop"]');
-        checkoutButton.click();
+
+        const changeZip = document.getElementById('changeDeliveryZip');
+        if (changeZip) {
+            changeZip.click();
+        }
+        const zip = document.querySelector('#postalCode1-2');
+        if (zip) {
+            zip.value = this.input.zip;
+        }
+        const saveZip = document.getElementById('saveChangeZip');
+        if (saveZip) {
+            saveZip.click();
+        }
+
         return null;
     });
     if (response) {
@@ -132,26 +149,65 @@ module.exports = async function (input) {
 
     await extractorContext.waitForPage();
 
+    response = await extractorContext.execute(function () {
+        const utils = new window.__Utils(this, "NEG 3.5.2.");
+        var error = document.querySelector('.error');
+        if (error) {
+            return utils.endEx(null, 'ADDRESS_MISSING');
+        }
+        var checkoutButton = document.querySelector('[data-auid="cart_button_ContinueTop"]');
+        if (checkoutButton) {
+            checkoutButton.click();
+        }
+
+        return null;
+    });
+    if (response) {
+        return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+    }
+    
+    await extractorContext.waitForPage();
+
     await extractorContext.execute(function () {
-        var continueButton = document.querySelector('[class="btn primary fixed_width"]')
-        continueButton.click();
+        var continueButton = document.querySelector('[class="btn primary fixed_width"]');
+        if (continueButton) {
+            continueButton.click();
+        }
+    });
+
+    await extractorContext.waitForPage();
+
+    // await extractorContext.execute(function () {
+    //     const zip = document.querySelector('#postalCode1-2');
+    //     if (zip) {
+    //         zip.value = this.input.zip;
+    //     }
+    // });
+    await extractorContext.input({
+        "constructor": "Event",
+        "target": {
+          "cssSelector": "input#postalCode1-2",
+          "type": "tel"
+        },
+        "typeArg": "change",
+        "eventInit": {
+          "bubbles": true,
+          "cancelable": false
+        },
+        "value": extractorContext.memory.zip
     });
 
     await extractorContext.waitForPage();
 
     response = await extractorContext.execute(async function () {
         const utils = new window.__Utils(this, "NEG 3.5.2.");
-        var zip = document.querySelector('#postalCode1-2');
-        zip.value = this.input.zip;
-        // await new Promise(resolve => setTimeout(resolve, 1000));
         var error = document.querySelector('.error');
         if (error) {
             return utils.endEx(null, 'ADDRESS_MISSING');
         }
-        var selectOtherCityAndState = document.querySelector('select#checkoutCityAndState');
-        if (selectOtherCityAndState.innerHTML) {
-
-        }
+        // var selectOtherCityAndState = document.querySelector('select#checkoutCityAndState');
+        // if (selectOtherCityAndState.innerHTML) {
+        // }
 
         var fullName = this.input.name.split(' ');
         var firstName = document.querySelector('[id*="firstName"]');
