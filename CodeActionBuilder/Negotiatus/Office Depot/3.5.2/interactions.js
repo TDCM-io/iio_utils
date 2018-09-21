@@ -56,28 +56,38 @@ module.exports = async function (input) {
             var oneTimeDelivery = document.querySelector('#radioOneTimeDelivery');
             if (oneTimeDelivery) {
                 oneTimeDelivery.click();
-                await utils.delay(1000);
+                // await utils.delay(1000);
+            }
+            if (this.memory.quantity > 9999) {
+                return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
             }
             var qty = document.querySelector('#mainqtybox');
             qty.value = this.memory.quantity;
             // wait a bit
             // await new Promise(resolve => setTimeout(resolve, 1000));
             // check if given quantity exceeds max
+
             var addToCart = document.querySelector('#addToCartButtonId');
-            addToCart.click();
-            await utils.delay(3000);
-            // wait a bit
-            // await new Promise(resolve => setTimeout(resolve, 2000));
+            await addToCart.click();
+        });
+        if (response) {
+            return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+        }
+
+        await extractorContext.waitForPage();
+
+        response = await extractorContext.execute(async function () {
+            const utils = new window.__Utils(this, "NEG 3.5.2.");
 
             var proceed = document.querySelector('#prelightboxContinueBtn');
             if (proceed) {
                 proceed.click();
             }
-            await utils.delay(3000);
+            // await utils.delay(3000);
             const temp = document.evaluate("//*[@id=\"multipleStoresModal\"]/h3", document.body, null, XPathResult.ANY_TYPE, null).iterateNext();
             if (temp) {
                 if (temp.innerText === "Buy Online & Pickup in Store") {
-                    return utils.endEx(null, null, null, 'This product is not available at this time.');
+                    return utils.endEx(null, 'PRODUCT_NOT_AVAILABLE_FOR_SHIPPING');
                 }
             }
             if (document.getElementById('skuNotAvailable')) {
@@ -133,7 +143,7 @@ module.exports = async function (input) {
         const utils = new window.__Utils(this, "NEG 3.5.2.");
         var zip = document.querySelector('#postalCode1-2');
         zip.value = this.input.zip;
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // await new Promise(resolve => setTimeout(resolve, 1000));
         var error = document.querySelector('.error');
         if (error) {
             return utils.endEx(null, 'ADDRESS_MISSING');
@@ -169,7 +179,18 @@ module.exports = async function (input) {
         if (contbtn) {
             contbtn.click();
         }
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        // await utils.delay(5000);
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+        return null;
+    });
+    if (response) {
+        return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+    }
+
+    await extractorContext.waitForPage();
+
+    response = await extractorContext.execute(async function () {
+        const utils = new window.__Utils(this, "NEG 3.5.2.");
         // check for 'The following address you entered is not recognized by our database' message
         var warning = document.querySelector('div#skipGroupOne');
         if (warning) {
@@ -224,7 +245,7 @@ module.exports = async function (input) {
                 const firstDate = new Date();
                 const secondDate = new Date(matched[0]);
                 const diffDays = Math.ceil(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
-                if (max_days < diffDays) {
+                if (this.input.max_days < diffDays) {
                     return utils.endEx(null, 'MAX_SHIPPING_DAYS_EXCEEDED');
                 }
             //return this.return(this.createData({'est_del': matched[0]}));
