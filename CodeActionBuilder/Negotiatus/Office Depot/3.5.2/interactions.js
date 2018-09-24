@@ -326,8 +326,9 @@ module.exports = async function (input) {
     
     console.log('extractor memory', extractorContext.memory);
 
+    // const data = await extractorContext.extractData(dir.config.runtimeConfig);
     const data = await extractorContext.extractData({
-        'fields': [
+        "fields": [
             {
                 "id": "17ce627e-5cf3-472e-83b2-db44a6c0e80e",
                 "name": "sku",
@@ -364,7 +365,7 @@ module.exports = async function (input) {
                 "xpath": "//td[@class='line_item_extended_price']/span[last()]",
                 "regExp": "(\\$\\d+\\.\\d{2})",
                 "regExpReplace": "$1",
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
@@ -416,7 +417,7 @@ module.exports = async function (input) {
                         "td.orderSummary_subtotal"
                     ]
                 ],
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
@@ -428,7 +429,7 @@ module.exports = async function (input) {
                         "td.orderSummary_taxes"
                     ]
                 ],
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
@@ -440,7 +441,7 @@ module.exports = async function (input) {
                         "td.orderSummary_delivery"
                     ]
                 ],
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
@@ -448,14 +449,15 @@ module.exports = async function (input) {
                 "name": "discount",
                 "type": "TEXT",
                 "xpath": "//td[not(@synthetic)]/div[@id='checkoutSavingsAmount']/strong",
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
                 "id": "f8aa117c-2be8-42f7-abf5-e8bd253fc8a9",
                 "name": "fee",
                 "type": "AUTO",
-                "defaultValue": 0,
+                "xpath": "//body/@fee",
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
@@ -467,7 +469,7 @@ module.exports = async function (input) {
                         "td.orderSummary_total"
                     ]
                 ],
-                "defaultValue": 0,
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
