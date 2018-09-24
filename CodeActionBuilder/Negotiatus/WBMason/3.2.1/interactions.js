@@ -224,64 +224,6 @@ module.exports = async function (input) {
 
     await extractorContext.waitForPage();
 
-    const data = await extractorContext.extractData({
-        "fields": [{
-                "id": "343ac94c-8c15-431e-9f76-6a8ee40063e6",
-                "name": "order_number",
-                "type": "AUTO",
-                "xpath": "//td[@id='order_number']",
-                "defaultValue": " ",
-                "ranking": 0
-            },
-           
-            {
-                "id": "d0d1945e-56ca-4d02-b670-36e051aea5f6",
-                "name": "status",
-                "type": "AUTO",
-                "xpath": "//body/@status",
-                "defaultValue": " ",
-                "ranking": 0
-            },
-            {
-                "id": "14588bb9-9b71-4630-890d-52adf5bd2f95",
-                "name": "message",
-                "type": "AUTO",
-                "selector": [
-                    [
-                        "div.hdr_lastblock"
-                    ]
-                ],
-                "xpath": "//body/@message",
-                "defaultValue": " ",
-                "ranking": 0
-            },
-            {
-                "id": "a1fca538-28ed-4001-907a-ba6d13affa1e",
-                "name": "auth_status",
-                "xpath": "//body/@auth_status",
-                "defaultValue": " ",
-                "type": "AUTO",
-                "ranking": 0
-            },
-            {
-                "id": "5cf9d0df-70b8-446c-958c-ae466ae6ffe0",
-                "name": "auth_message",
-                "xpath": "//body/@auth_message",
-                "defaultValue": " ",
-                "type": "AUTO",
-                "ranking": 0
-            }
-        ],
-        "singleRecord": true,
-        "noscript": true,
-        "screenCapture": true
-    });
-    
-
-
-    
+    const data = await extractorContext.extractData(INSERT_CONFIG_HERE);
     return extractorContext.return(data);
-
-
-
 };
