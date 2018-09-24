@@ -20,7 +20,7 @@ if (loginUrl) {
 
   var jsonText = JSON.stringify({
     'extractionConfigs': {
-      "_runtimeConfig": {configJSON}
+      "_runtimeConfig": configJSON
     },
     'authInteractions': [{
         'constructor': 'GotoAction',
