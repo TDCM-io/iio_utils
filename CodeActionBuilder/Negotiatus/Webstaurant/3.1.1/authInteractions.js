@@ -39,7 +39,7 @@ module.exports = async function (input) {
   //   let alert;
   //   window.alert = msg => {alert = msg};
   // });
-  //extractorContext.window.alert = msg => {alert = msg};
+  extractorContext.window.alert = msg => {alert = msg};
 
   await extractorContext.click('input[id="the_login_button"]');
 
@@ -51,13 +51,13 @@ module.exports = async function (input) {
 
   console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    //alert;
+    // alert;
     if(document.querySelector('.alert-info')){
       return document.querySelector('.alert-info').innerText.replace("× ", "");
     }
-    // else if(msg){
-    //   return msg;
-    // }
+    else if(msg){
+      return msg;
+    }
     return null;
   });
 

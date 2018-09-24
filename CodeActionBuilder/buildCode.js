@@ -25,7 +25,8 @@ if (loginUrl) {
           'externalScripts': [
             'https://tdcmioiio.herokuapp.com/utils.js',
             'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
+          ],
+          discard_CSP_header: true
         }
       },
       {
@@ -40,7 +41,8 @@ if (loginUrl) {
           'externalScripts': [
             'https://tdcmioiio.herokuapp.com/utils.js',
             'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
+          ],
+          discard_CSP_header: true
         }
       },
       {
@@ -59,7 +61,8 @@ if (loginUrl) {
           'externalScripts': [
             'https://tdcmioiio.herokuapp.com/utils.js',
             'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
+          ],
+          discard_CSP_header: true
         }
       },
       {
