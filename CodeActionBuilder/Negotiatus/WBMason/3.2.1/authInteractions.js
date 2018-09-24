@@ -1,16 +1,16 @@
 module.exports = async function (input) {
-  
 
- 
+
+
   console.log("auth interactions");
-  
+
   function delay(timeout) {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
- console.log('finished waiting for page');
+  console.log('finished waiting for page');
 
-  await extractorContext.waitForPage();
+  await extractorContext.waitForPage(); 
   await extractorContext.input({
     "constructor": "Event",
     "target": {
@@ -65,7 +65,7 @@ module.exports = async function (input) {
     }
   });
   console.log('finished button click');
-  
+
   await extractorContext.waitForPage();
   console.log('Set error message if exist');
   await extractorContext.execute(function () {
@@ -75,105 +75,108 @@ module.exports = async function (input) {
       this.memory.auth_message = errorMsg;
     }
   });
- 
+
   console.log('Set status');
   await extractorContext.waitForPage();
   await extractorContext.execute(function () {
-    
-    if(this.memory.auth_message)
-  {
-    this.memory.auth_status = 'FAILURE';
-    
-  }
-  else
-  {
-    var signoutButton = document.querySelector('#ctl00_lnkLogOut');
-    
-    if(!signoutButton)
-    {
-      this.memory.auth_status = 'UNKNOWN';
-      this.memory.auth_message='User is not logged in, for an unknown reason.';
-      throw "User is not logged in, for an unknown reason.";
+
+    if (this.memory.auth_message) {
+      this.memory.auth_status = 'FAILURE';
+
+    } else {
+      var signoutButton = document.querySelector('#ctl00_lnkLogOut');
+
+      if (!signoutButton) {
+        this.memory.auth_status = 'UNKNOWN';
+        this.memory.auth_message = 'User is not logged in, for an unknown reason.';
+        throw "User is not logged in, for an unknown reason.";
+      } else {
+        this.memory.auth_status = 'SUCCESS';
+      }
+      this.memory.auth_message = ' ';
     }
-    else
-    {
-      this.memory.auth_status = 'SUCCESS';
-    }
-    this.memory.auth_message = ' ';
-  }
   });
-  if(extractorContext.memory.auth_status == 'UNKNOWN')
-  {
-    return extractorContext.reportBlocked(result.code, 'Incorrect status code'); 
+  if (extractorContext.memory.auth_status == 'UNKNOWN') {
+    return extractorContext.reportBlocked(result.code, 'Incorrect status code');
   }
-  
+
   try {
     await extractorContext.click("#ctl00_lnkLoginAction1");
   } catch (error) {
-   return ;
+    return;
   }
-  if(extractorContext.memory.auth_status != 'SUCCESS')
-  {
-    return ;
+  if (extractorContext.memory.auth_status != 'SUCCESS') {
+    return;
   }
-  
+
   console.log('Find secoundary login info element');
- 
+
   await extractorContext.waitForPage();
+
   var columnID = await extractorContext.execute(function () {
     try {
-      
-    
-    function contains(selector, text) {
-      var elements = document.querySelectorAll(selector);
-      return Array.prototype.filter.call(elements, function (element) {
-        return RegExp(text).test(element.textContent);
-      });
-    }
-    
-    var k = contains("td", input._credentials.secondary_login_info);
-    console.log('Inner column id'+k);
 
-    const regex = /ctl[1-9]\d/gm;
-    const str = k[0].innerHTML;
-    let m;
-    var columnID="";
 
-    while ((m = regex.exec(str)) !== null) {
-      
-      // This is necessary to avoid infinite loops with zero-width matches
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
+      function contains(selector, text) {
+        var elements = document.querySelectorAll(selector);
+        return Array.prototype.filter.call(elements, function (element) {
+          return RegExp(text).test(element.textContent);
+        });
       }
 
-      // The result can be accessed through the `m`-variable.
-      m.forEach((match, groupIndex) => {
-        columnID = match;
-        console.log('Column id match'+match);
-      });
-    }
-    return columnID;
-  } catch (error) {
+      var k = contains("td", input._credentials.secondary_login_info);
+      console.log('Inner column id' + k);
+
+      const regex = /ctl[1-9]\d/gm;
+      const str = k[0].innerHTML;
+      let m;
+      var columnID = "";
+
+      while ((m = regex.exec(str)) !== null) {
+
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+          regex.lastIndex++;
+        }
+
+        // The result can be accessed through the `m`-variable.
+        m.forEach((match, groupIndex) => {
+          columnID = match;
+          console.log('Column id match' + match);
+        });
+      }
+      return columnID;
+    } catch (error) {
       console.log("Error from query sellector:" + error)
-  }
+      this.memory.auth_status = 'FAILURE'
+      this.memory.auth_message = "Invalid secondary login info";
+    }
   });
 
-  
-  console.log('Column id: '+ columnID);
+
+  console.log('Column id: ' + columnID);
   //await delay(3000);
 
   console.log("click link");
-  try {
-    await extractorContext.click("#ctl00_ContentPlaceholder1_SelectAccount1_AccountGridView_"+columnID+"_LoginLink");
-    
-  } catch (error) {
-    this.memory.auth_status = error;
-    return ;
+  if (columnID) {
+    try {
+      await extractorContext.click("#ctl00_ContentPlaceholder1_SelectAccount1_AccountGridView_" + columnID + "_LoginLink");
+
+    } catch (error) {
+      await extractorContext.execute(function (){
+        this.memory.auth_status = 'FAILURE'
+        this.memory.auth_message = "Invalid secondary login info";
+       });
+      
+      return;
+    }
+
+    console.log("link clicked")
+    await extractorContext.waitForPage();
+    await extractorContext.goto("https://wbmason.com/default.aspx");
+  } else {
+    return;
   }
-  
-  console.log("link clicked")
-  await extractorContext.waitForPage();
-  await extractorContext.goto("https://wbmason.com/default.aspx");
 
 
 
