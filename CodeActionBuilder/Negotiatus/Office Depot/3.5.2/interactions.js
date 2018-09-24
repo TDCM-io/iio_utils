@@ -482,7 +482,9 @@ module.exports = async function (input) {
                 "id": "c2c2a37e-fcda-4805-943c-4caf0e74a92a",
                 "name": "estimated_delivery_date",
                 "type": "AUTO",
-                "xpath": "//div[@class='checkout_v2_sidebar_box clearfix'][last()]",
+                "xpath": "//div[@class='checkout_v2_sidebar_box clearfix']/h5",
+                "regExp": "(\\d{2}\/\\d{2}\/\\d{4})",
+                "regExpReplace": "$1",
                 "defaultValue": " ",
                 "ranking": 0
             },
@@ -494,7 +496,7 @@ module.exports = async function (input) {
                 "defaultValue": " ",
                 "ranking": 0
             }
-            ],
+        ],
         "singleRecord": true,
         "noscript": true,
         "screenCapture": true
