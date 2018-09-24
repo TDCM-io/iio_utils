@@ -133,9 +133,9 @@
             },
             {
                 "id": "f8aa117c-2be8-42f7-abf5-e8bd253fc8a9",
-                "name": "fee",
+                "name": "fees",
                 "type": "AUTO",
-                "xpath": "//body/@fee",
+                "xpath": "//body/@fees",
                 "defaultValue": "0",
                 "ranking": 0
             },

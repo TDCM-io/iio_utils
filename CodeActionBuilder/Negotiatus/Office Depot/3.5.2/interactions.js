@@ -62,6 +62,14 @@ module.exports = async function (input) {
             if (this.memory.quantity > 9999) {
                 return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
             }
+            var limit = document.querySelector('div#productPurchase p.unified_qty_limit');
+            if (limit) {
+                if (/\d/.test(limit.innerText)) {
+                    if (this.memory.quantity > parseInt(limit.innerText.match(/(\d+)/)[0])) {
+                        return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
+                    }
+                }
+            }
             var qty = document.querySelector('#mainqtybox');
             qty.value = this.memory.quantity;
             // wait a bit
@@ -454,9 +462,9 @@ module.exports = async function (input) {
             },
             {
                 "id": "f8aa117c-2be8-42f7-abf5-e8bd253fc8a9",
-                "name": "fee",
+                "name": "fees",
                 "type": "AUTO",
-                "xpath": "//body/@fee",
+                "xpath": "//body/@fees",
                 "defaultValue": "0",
                 "ranking": 0
             },
