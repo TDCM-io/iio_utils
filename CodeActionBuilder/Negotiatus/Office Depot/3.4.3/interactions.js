@@ -94,24 +94,96 @@ module.exports = async function (input) {
     }
     console.log("input O.K.");
 
-    console.log("get product info into variables");
-    var sku, product, price, product_url, quantity;
-    sku = await extractorContext.execute(async function (a) {
-        if (document.querySelector('#basicInfoCustomerSku')) return document.querySelector('#basicInfoCustomerSku').innerText.trim();
-        return " ";
+    await extractorContext.execute(async function (a) {
+        document.body.setAttribute('auth_status', this.memory.auth_status);
+        document.body.setAttribute('auth_message', this.memory.auth_message);
+        document.body.setAttribute('status', 'SUCCESS');
+        document.body.setAttribute('message', ' ');
     });
-    product = await extractorContext.execute(async function (a) {
-        if (document.querySelector('.sku_title')) return document.querySelector('.sku_title').textContent;
-        return " ";
-    });
-    price = await extractorContext.execute(async function (a) {
-        if (document.querySelector('span[class="price_column right "]')) return document.querySelector('span[class="price_column right "]').innerText;
-        return "$0";
-    });
-    product_url = await extractorContext.execute(async function (a) {
-        return window.location.href;
-    });
-    quantity = input.quantity;
+    console.log("create runtimeConfig");
+    const runtimeConfig = {
+        "fields": [
+          {
+            "id": "79f26368-570b-4db7-8298-87ac9699b7d3",
+            "name": "auth_status",
+            "type": "AUTO",
+            "xpath": "//body/@auth_status",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "79f26368-570b-4db7-8298-87ac9699b7d4",
+            "name": "auth_message",
+            "type": "AUTO",
+            "xpath": "//body/@auth_message",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "f3d5a117-698c-4b52-bb76-4f1466b0a787",
+            "name": "status",
+            "type": "AUTO",
+            "xpath": "//body/@status",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "7e5620e6-d6b2-4157-b9e2-a45d9ae3003a",
+            "name": "message",
+            "type": "AUTO",
+            "xpath": "//body/@message",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "11353a3e-a39e-46b0-a3a3-d4cfbb1824fa",
+            "name": "sku",
+            "type": "AUTO",
+            "xpath": "//*[@id=\"basicInfoCustomerSku\"]",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "8d172ff6-41f3-4970-a535-f1982917925b",
+            "name": "product",
+            "type": "AUTO",
+            "xpath": "//*[@id=\"stickyHeader\"]//span[@class=\"sku_title\"]",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "31e27e97-f069-4c3f-9f0c-2f792866910a",
+            "name": "price",
+            "type": "AUTO",
+            "xpath": "//div[@class=\"unified_price_table\"]/*[2]/*[@class=\"price_column right \"]",
+            "defaultValue": "$0",
+            "ranking": 0
+          },
+          {
+            "id": "fb969894-18f5-4332-8c20-6094438bb79f",
+            "name": "product_url",
+            "type": "AUTO",
+            "xpath": "/html/head/link[@rel=\"canonical\"]/@href",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "f4105b36-c692-4b03-9145-554541614e5a",
+            "name": "quantity",
+            "type": "AUTO",
+            "defaultValue": "0",
+            "ranking": 0
+          }
+        ],
+        "singleRecord": true,
+        "noscript": true,
+        "screenCapture": false
+      }
+    console.log("O.K.");
+
+    console.log("extract data");
+    var extractedData = await extractorContext.extractData(runtimeConfig);
+
     console.log("O.K.");
 
     console.log("put quantity into form");
@@ -148,97 +220,10 @@ module.exports = async function (input) {
         return extractorContext.return(extractorContext.createData(returnedData['data'][0]['group']));
     }
     console.log("O.K.");
-    extractorContext.setMemory({
-        auth_status: extractorContext.memory.auth_status,
-        auth_message: extractorContext.memory.auth_message,
-        status: 'SUCCESS',
-        message: ' '
-    });
-    console.log("Extract data");
-    const data = extractorContext.createData(
-        [{
-            'auth_status': extractorContext.memory.auth_status,
-            'auth_message': extractorContext.memory.auth_message,
-            'status': extractorContext.memory.status,
-            'message': extractorContext.memory.message,
-            'sku': sku,
-            'product': product,
-            'price': price,
-            'product_url': product_url,
-            'quantity': quantity
-        }]
-    );
 
-    const runtimeConfig = {
-        "fields": [
-          {
-            "id": "79f26368-570b-4db7-8298-87ac9699b7d3",
-            "name": "auth_status",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "79f26368-570b-4db7-8298-87ac9699b7d4",
-            "name": "auth_message",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "f3d5a117-698c-4b52-bb76-4f1466b0a787",
-            "name": "status",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "7e5620e6-d6b2-4157-b9e2-a45d9ae3003a",
-            "name": "message",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "11353a3e-a39e-46b0-a3a3-d4cfbb1824fa",
-            "name": "sku",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "8d172ff6-41f3-4970-a535-f1982917925b",
-            "name": "product",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "31e27e97-f069-4c3f-9f0c-2f792866910a",
-            "name": "price",
-            "type": "AUTO",
-            "defaultValue": "0",
-            "ranking": 0
-          },
-          {
-            "id": "fb969894-18f5-4332-8c20-6094438bb79f",
-            "name": "product_url",
-            "type": "AUTO",
-            "defaultValue": " ",
-            "ranking": 0
-          },
-          {
-            "id": "f4105b36-c692-4b03-9145-554541614e5a",
-            "name": "quantity",
-            "type": "AUTO",
-            "defaultValue": "0",
-            "ranking": 0
-          }
-        ],
-        "singleRecord": true,
-        "noscript": true,
-        "screenCapture": false
-      }
+    extractedData[0].group[0].quantity[0].text = await extractorContext.execute(async function (a) {return document.querySelector('div.added_meta').innerText.replace("Qty ", "")});
 
-    return extractorContext.return(data);
+    console.log("return data");
+
+    return extractorContext.return(extractedData);
 };
