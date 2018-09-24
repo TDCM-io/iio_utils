@@ -10,7 +10,8 @@ var dir = requireDir(process.argv[2]);
 
 const loginUrl = dir.config.loginUrl;
 const siteUrl = dir.config.siteUrl;
-const configJSON = dir.config.runtimeConfig ? JSON.stringify(dir.config.runtimeConfig) : " ";
+const configJSON = dir.config.runtimeConfig;
+const gotoActionOptions = dir.config.gotoActionOptions || {};
 
 const interactions = `module.exports = ${dir.interactions.toString().replace(/INSERT_CONFIG_HERE/, configJSON)}`;
 
@@ -24,12 +25,7 @@ if (loginUrl) {
     'authInteractions': [{
         'constructor': 'GotoAction',
         'url': loginUrl,
-        'options': {
-          'externalScripts': [
-            'https://tdcmioiio.herokuapp.com/utils.js',
-            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
-        }
+        'options': gotoActionOptions
       },
       {
         'constructor': 'CodeAction',
@@ -39,12 +35,7 @@ if (loginUrl) {
     'interactions': [{
         'constructor': 'GotoAction',
         'url': siteUrl,
-        'options': {
-          'externalScripts': [
-            'https://tdcmioiio.herokuapp.com/utils.js',
-            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
-        }
+        'options': gotoActionOptions
       },
       {
         'constructor': 'CodeAction',
@@ -55,17 +46,12 @@ if (loginUrl) {
 } else {
   var jsonText = JSON.stringify({
     'extractionConfigs': {
-      "_runtimeConfig": {configJSON}
+      "_runtimeConfig": configJSON
     },
     'interactions': [{
         'constructor': 'GotoAction',
         'url': siteUrl,
-        'options': {
-          'externalScripts': [
-            'https://tdcmioiio.herokuapp.com/utils.js',
-            'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'
-          ]
-        }
+        'options': gotoActionOptions
       },
       {
         'constructor': 'CodeAction',
