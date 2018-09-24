@@ -2,7 +2,7 @@ var jsdom = require('mocha-jsdom');
 var expect = require('chai').expect;
 var fs = require('fs');
 var vm = require('vm');
-var path = './utils.js';
+var path = './lib/utils.js';
 var code = fs.readFileSync(path);
 
 class importContext {
