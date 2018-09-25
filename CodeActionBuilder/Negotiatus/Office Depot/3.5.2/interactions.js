@@ -1,17 +1,9 @@
 module.exports = async function (input) {
     console.log('extractor input', input);
-    function delay(timeout) {
-        return new Promise(resolve => setTimeout(resolve, timeout));
-    }
-    const lastResponseData = await extractorContext.goto('https://www.officedepot.com/');
-    console.log('finished goto', lastResponseData.code);
-    // if (lastResponseData.code !== 200) {
-    //     return {
-    //         'status': 'FAILURE',
-    //         'message': 'Page loaded incorrectly',
-    //         lastResponseData
-    //     };
-    // }
+    var lastResponseData = await extractorContext.goto('https://www.officedepot.com/');
+    extractorContext.setMemory({...extractorContext.memory, ...{lastResponseData: lastResponseData}});
+    console.log('finished goto');
+
     console.log('log outside execute');
     var response = await extractorContext.execute(async function () {
         const utils = new window.__Utils(this, "NEG 3.5.2.");
@@ -38,8 +30,21 @@ module.exports = async function (input) {
     console.log('extractor memory', extractorContext.memory);
     products = extractorContext.memory.products;
     for (let i = 0; i < products.length; i++) {
-        await extractorContext.goto(products[i].url);
+        // await extractorContext.goto(products[i].url);
+        extractorContext.setMemory({...extractorContext.memory, ...{product_url: products[i].url}});
+        response = await extractorContext.execute(async function () {
+            const utils = new window.__Utils(this, "NEG 3.5.2.");
+            if (!/^((https?|ftp):\/\/)?(www\.)?officedepot\.com\/a\/products\/\d+/.test(this.memory.product_url)) {
+                return utils.endEx(null, 'INVALID_URL');
+            }
+            await utils.safeRedirect(this.memory.product_url);
+            return null;
+        });
+        if (response) {
+            return extractorContext.return(extractorContext.createData(response['data'][0]['group']));
+        }
         // TODO check if url is valid
+
         await extractorContext.waitForPage();
 
         // let quantity = products[i].quantity;
@@ -49,6 +54,16 @@ module.exports = async function (input) {
         
         response = await extractorContext.execute(async function () {
             const utils = new window.__Utils(this, "NEG 3.5.2.");
+            var invalidSku = document.querySelector('div#pagetitle');
+            if (invalidSku) {
+                if (/Invalid Sku/i.test(invalidSku.innerText)) {
+                    return utils.endEx(null, 'INVALID_URL');
+                }
+            }
+            var noLongerAvailable = document.querySelector('div[class*="no_longer_avail"]');
+            if (noLongerAvailable) {
+                return utils.endEx(null, 'PRODUCT_OUT_OF_STOCK');
+            }
             const shipOnly = document.getElementById('availabilityBlock');
             if (!shipOnly) {
                 return utils.endEx(null, 'PRODUCT_NOT_AVAILABLE_FOR_SHIPPING');
@@ -60,21 +75,18 @@ module.exports = async function (input) {
                 // await utils.delay(1000);
             }
             if (this.memory.quantity > 9999) {
-                return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
+                return utils.endEx(null, 'INVALID_QUANTITY_PROVIDED');
             }
             var limit = document.querySelector('div#productPurchase p.unified_qty_limit');
             if (limit) {
                 if (/\d/.test(limit.innerText)) {
                     if (this.memory.quantity > parseInt(limit.innerText.match(/(\d+)/)[0])) {
-                        return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
+                        return utils.endEx(null, 'QUANTITY_EXCEEDS_MAX_ALLOWED');
                     }
                 }
             }
             var qty = document.querySelector('#mainqtybox');
             qty.value = this.memory.quantity;
-            // wait a bit
-            // await new Promise(resolve => setTimeout(resolve, 1000));
-            // check if given quantity exceeds max
 
             var addToCart = document.querySelector('#addToCartButtonId');
             await addToCart.click();
@@ -111,7 +123,7 @@ module.exports = async function (input) {
             }
             var quantityTooHigh = document.querySelector('[data-auid="cart_title_skuStatusMessage"]');
             if (quantityTooHigh) {
-                return utils.endEx(null, null, null, 'Maximum quantity exceeded.');
+                return utils.endEx(null, 'QUANTITY_EXCEEDS_AVAILABLE_STOCK');
             }
 
             return null;
