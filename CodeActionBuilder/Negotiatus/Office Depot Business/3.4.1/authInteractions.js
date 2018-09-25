@@ -54,7 +54,7 @@ module.exports = async function (input) {
           return err[0].innerText + ". " + err[1].innerText;
         }
         else{
-          return err.innerText;
+          return err[0].innerText;
         }
       }
     }
