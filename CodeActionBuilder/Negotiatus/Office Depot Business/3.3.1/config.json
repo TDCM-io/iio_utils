@@ -42,7 +42,7 @@
                 "id": "ff34d932-0aea-43cd-b471-933bd6eb7366",
                 "name": "price",
                 "type": "TEXT",
-                "defaultValue": " ",
+                "defaultValue": "0",
                 "ranking": 0
             },
             {

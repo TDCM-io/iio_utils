@@ -75,7 +75,7 @@
                         "span.sundaySkyprice.hide"
                     ]
                 ],
-                "defaultValue": " ",
+                "defaultValue": "0",
                 "ranking": 0
             },
             {
