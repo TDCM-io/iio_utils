@@ -25,7 +25,8 @@ module.exports = async function (input) {
     await new Promise(r => setTimeout(r, 3000));
     console.log('O.K.');
 
-    await extractorContext.execute(async function (a) {
+    console.log('count items in cart and build data table');
+    var buttonsCount = await extractorContext.execute(async function (a) {
         var products = new Array(), sortedProducts, quantity = new Array();
         if(document.querySelector('tr[id*="cartItem"]')){
             var selector = document.querySelectorAll('tr[id*="cartItem"]')
@@ -70,7 +71,17 @@ module.exports = async function (input) {
           }
           tbl.appendChild(tblBody);
           body.appendChild(tbl);
+
+          return products.length;
     });
+    console.log('O.K.');
+
+    console.log('check for remove buttons');
+    if(!buttonsCount){
+        const utils = new window.__Utils(this, "NEG 3.4.1.");
+        return utils.endEx('AUTH_SUCCESS', 'EMPTY_CART');
+    }
+    console.log('O.K.');
 
     await extractorContext.execute(async function (a) {
         document.body.setAttribute('auth_status', this.memory.auth_status);
@@ -117,7 +128,7 @@ module.exports = async function (input) {
                 "id": "90ff816c-f2a2-48f5-87bc-f6d4910c57c8",
                 "name": "product",
                 "type": "AUTO",
-                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#productName",
+                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//*[id=\"#productName\"]",
                 "defaultValue": " ",
                 "ranking": 0
               },
@@ -125,7 +136,7 @@ module.exports = async function (input) {
                 "id": "92828a58-03e0-4e11-b5b9-c86987687024",
                 "name": "quantity",
                 "type": "AUTO",
-                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#quantity",
+                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//*[id=\"#quantity\"]",
                 "defaultValue": "0",
                 "ranking": 0
               }
@@ -138,6 +149,13 @@ module.exports = async function (input) {
 
     console.log("extract data");
     var extractedData = await extractorContext.extractData(runtimeConfig);
+    console.log("O.K.");
+
+    console.log("remove cart items");
+    for(var i = 0; i < buttonsCount; i++){
+        await extractorContext.click('tr[id*="cartItem"] input[title="Remove"]');
+        await new Promise(r => setTimeout(r, 2000));
+    }
     console.log("O.K.");
 
     console.log("return data");

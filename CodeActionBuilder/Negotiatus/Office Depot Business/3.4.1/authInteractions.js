@@ -2,6 +2,7 @@ module.exports = async function (input) {
   console.log('Authorization interactions');
   console.log('extractor input', input);
 
+  console.log('input username');
   await extractorContext.input({
     'constructor': 'Event',
     'target': {
@@ -14,10 +15,11 @@ module.exports = async function (input) {
     },
     'value': input._credentials.username,
   });
-  console.log('finished inputting username');
+  console.log('O.K.');
 
   await new Promise(r => setTimeout(r, 1000));
 
+  console.log('input password');
   await extractorContext.input({
     'constructor': 'Event',
     'target': {
@@ -30,46 +32,49 @@ module.exports = async function (input) {
     },
     'value': input._credentials.password,
   });
-  console.log('finished inputting password');
+  console.log('O.K.');
 
   await new Promise(r => setTimeout(r, 1000));
 
-  await extractorContext.click('button[type="submit"]');
-
-  console.log('finished click');
-
+  console.log('press login button');
+  await extractorContext.click('input[type="submit"]');
+  console.log('redirecting');
   await extractorContext.waitForPage();
+  console.log('O.K.');
 
-  console.log('finished waiting for page');
-
+  console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    err = document.querySelector('div[id="error"]');
+    err = document.querySelectorAll('.error');
     if (err) {
-      return err.querySelector('div > ul').innerText.replace("\n", " ");
+      if(err.length > 1){
+        return err[0].innerText + " " + err[1].innerText;
+      }
+      else{
+        return err.innerText;
+      }
+    }
+    else if(document.querySelectorAll('.block-copy')){
+      return document.querySelectorAll('.block-copy').innerText;
     }
     return null;
   });
 
-  let signoutLink = await extractorContext.execute(function () {
-    return document.querySelector('a[data-auid="global_link_logout"]');
-  });
-
-  await new Promise(r => setTimeout(r, 3000));
-
   if (error) {
     console.log("error found");
     extractorContext.setMemory({
+      auth_status: 'FAILURE',
       auth_message: error
     });
-  }
-  if (extractorContext.memory.auth_message) {
     console.log("error set to memory");
-    extractorContext.setMemory({
-      auth_status: 'FAILURE',
-      auth_message: extractorContext.memory.auth_message
-    });
     return;
-  } else if (!signoutLink) {
+  }
+
+  console.log("check for signout link");
+  let signoutLink = await extractorContext.execute(function () {
+    return document.querySelector('.logout-item');
+  });
+
+  if (!signoutLink) {
     console.log("no signout link found");
     extractorContext.setMemory({
       auth_status: 'UNKNOWN',
