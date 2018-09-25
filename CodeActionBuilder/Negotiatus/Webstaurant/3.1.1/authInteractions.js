@@ -1,3 +1,7 @@
+//
+//This extractor is incomplete.
+//It needs to read message from window.alert on login site, while there is invalid or empty login/password.
+//For now it return auth_status UNKNOWN when it meets authorization problems.
 module.exports = async function (input) {
   console.log('Authorization interactions');
   console.log('extractor input', input);
@@ -35,13 +39,20 @@ module.exports = async function (input) {
 
   await new Promise(r => setTimeout(r, 1000));
 
-  // await extractorContext.execute(function () {
-  //   let alert;
-  //   window.alert = msg => {alert = msg};
+  // var alert = await extractorContext.execute(function () {
+  //   let _alert;
+  //   window.alert = msg => {_alert=msg};
+
   // });
-  extractorContext.window.alert = msg => {alert = msg};
+  // window.alert = msg => {console.log(msg)};
 
   await extractorContext.click('input[id="the_login_button"]');
+  // var alert = await extractorContext.execute(function () {
+  //   let alertMsg;
+  //   window.alert = msg => {alertMsg = msg};
+  //   setTimeout(document.querySelector('input[id="the_login_button"]').click(), 300)
+  //   return alertMsg;
+  // });
 
   console.log('finished click');
 
@@ -51,12 +62,8 @@ module.exports = async function (input) {
 
   console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    // alert;
     if(document.querySelector('.alert-info')){
       return document.querySelector('.alert-info').innerText.replace("× ", "");
-    }
-    else if(msg){
-      return msg;
     }
     return null;
   });
