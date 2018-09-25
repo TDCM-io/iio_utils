@@ -221,7 +221,27 @@ module.exports = async function (input) {
     }
     console.log("O.K.");
 
-    extractedData[0].group[0].quantity[0].text = await extractorContext.execute(async function (a) {return document.querySelector('div.added_meta').innerText.replace("Qty ", "")});
+    console.log('proceed to checkout');
+    await extractorContext.click('a[data-auid="cartLightBox_buttom_viewCartAndCheckout"]');
+    console.log('redirecting');
+    await new Promise(r => setTimeout(r, 5000));
+
+    extractorContext.setMemory({
+        auth_status: extractorContext.memory.auth_status,
+        auth_message: extractorContext.memory.auth_message,
+        product: extractedData[0].group[0].product[0].text
+      });
+
+    extractedData[0].group[0].quantity[0].text = await extractorContext.execute(async function (a) {
+        var selector = document.querySelectorAll('.cart_entry_details ');
+        var sum = 0;
+        for(var i = 0; i < selector.length; i++){
+            if(selector[i].querySelector('.itemname').innerText === this.memory.product){
+                sum += parseInt(selector[i].querySelector('input[title="quantity"]').getAttribute('value'));
+            }
+        }
+        return sum;
+    });
 
     console.log("return data");
 
