@@ -31,6 +31,7 @@
             "id": "22c8f26c-41dc-47aa-bb90-1cc502de8782",
             "name": "message",
             "type": "AUTO",
+            "xpath": "//body/@message",
             "defaultValue": " ",
             "ranking": 0
           },
@@ -38,6 +39,7 @@
             "id": "90ff816c-f2a2-48f5-87bc-f6d4910c57c8",
             "name": "product",
             "type": "AUTO",
+            "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#productName",
             "defaultValue": " ",
             "ranking": 0
           },
@@ -45,6 +47,7 @@
             "id": "92828a58-03e0-4e11-b5b9-c86987687024",
             "name": "quantity",
             "type": "AUTO",
+            "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#quantity",
             "defaultValue": "0",
             "ranking": 0
           }
