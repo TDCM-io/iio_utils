@@ -2,7 +2,7 @@ module.exports = async function (input) {
     console.log('Interactions');
     console.log("check authorization");
     var returnedData = await extractorContext.execute(async function (a) {
-        const utils = new window.__Utils(this, "NEG 3.1.1.");
+        const utils = new window.__Utils(this, "NEG 3.4.3.");
         if (this.memory.auth_status != "SUCCESS") {
             if (this.memory.auth_status === "UNKNOWN") {
                 return utils.endEx('AUTH_UNKNOWN', 'BLANK_FAILURE');
