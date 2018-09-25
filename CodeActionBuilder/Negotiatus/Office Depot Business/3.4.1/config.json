@@ -1,0 +1,65 @@
+{
+    "loginUrl": "https://business.officedepot.com/",
+    "siteUrl": "https://business.officedepot.com/",
+    "runtimeConfig": {
+        "fields": [
+          {
+            "id": "00804369-b153-4462-aae7-c97218aa3ab8",
+            "name": "auth_status",
+            "type": "AUTO",
+            "xpath": "//body/@auth_status",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "c8fde873-faf5-4053-bfac-0f38f85abd3a",
+            "name": "auth_message",
+            "type": "AUTO",
+            "xpath": "//body/@auth_message",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "f48c487d-f2b8-4933-8830-5bef4f3fc3ef",
+            "name": "status",
+            "type": "AUTO",
+            "xpath": "//body/@status",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "22c8f26c-41dc-47aa-bb90-1cc502de8782",
+            "name": "message",
+            "type": "AUTO",
+            "xpath": "//body/@message",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "90ff816c-f2a2-48f5-87bc-f6d4910c57c8",
+            "name": "product",
+            "type": "AUTO",
+            "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#productName",
+            "defaultValue": " ",
+            "ranking": 0
+          },
+          {
+            "id": "92828a58-03e0-4e11-b5b9-c86987687024",
+            "name": "quantity",
+            "type": "AUTO",
+            "xpath": "//*[@id=\"tblCartHistory\"]/tbody//#quantity",
+            "defaultValue": "0",
+            "ranking": 0
+          }
+        ],
+        "singleRecord": true,
+        "noscript": true,
+        "screenCapture": false
+      },
+    "gotoActionOptions": {
+        "externalScripts": [
+            "https://tdcmioiio.herokuapp.com/utils.js",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        ]
+    }
+}
