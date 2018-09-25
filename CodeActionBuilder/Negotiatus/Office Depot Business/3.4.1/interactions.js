@@ -25,7 +25,7 @@ module.exports = async function (input) {
     await new Promise(r => setTimeout(r, 3000));
     console.log('O.K.');
 
-    await extractorContext.execute(async function (a) {
+    var buttonsCount = await extractorContext.execute(async function (a) {
         var products = new Array(), sortedProducts, quantity = new Array();
         if(document.querySelector('tr[id*="cartItem"]')){
             var selector = document.querySelectorAll('tr[id*="cartItem"]')
@@ -70,6 +70,8 @@ module.exports = async function (input) {
           }
           tbl.appendChild(tblBody);
           body.appendChild(tbl);
+
+          return products.length;
     });
 
     await extractorContext.execute(async function (a) {
@@ -135,6 +137,11 @@ module.exports = async function (input) {
         "screenCapture": false
       }
     console.log("O.K.");
+
+    for(var i = 0; i < buttonsCount; i++){
+        await extractorContext.click('tr[id*="cartItem"] input[title="Remove"]');
+        await new Promise(r => setTimeout(r, 2000));
+    }
 
     console.log("extract data");
     var extractedData = await extractorContext.extractData(runtimeConfig);
