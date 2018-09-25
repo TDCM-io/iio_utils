@@ -1,0 +1,48 @@
+{
+    "siteUrl": "https://business.officedepot.com/",
+    "gotoActionOptions": {
+        "externalScripts": [
+            "https://tdcmioiio.herokuapp.com/utils.js",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        ]
+    },
+    "runtimeConfig": {
+        "fields": [
+            {
+                "id": "0683c6d6-1332-4400-b115-1c1613eca907",
+                "name": "auth_status",
+                "type": "AUTO",
+                "xpath": "//body/@auth_status",
+                "defaultValue": "SUCCESS",
+                "ranking": 0
+            },
+            {
+                "id": "8722112c-d0cd-4399-88c5-21fc0911a26f",
+                "name": "auth_message",
+                "type": "AUTO",
+                "xpath": "//body/@auth_message",
+                "defaultValue": " ",
+                "ranking": 0
+            },
+            {
+                "id": "c01429bd-b92c-4adb-8798-1f8f0f6f482a",
+                "name": "status",
+                "type": "AUTO",
+                "xpath": "//body/@status",
+                "defaultValue": "SUCCESS",
+                "ranking": 0
+            },
+            {
+                "id": "347c48b8-fc1e-4f05-a261-0d6373f7d96e",
+                "name": "message",
+                "type": "AUTO",
+                "xpath": "//body/@message",
+                "defaultValue": " ",
+                "ranking": 0
+            }
+        ],
+        "singleRecord": true,
+        "noscript": true,
+        "screenCapture": true
+    }
+}
