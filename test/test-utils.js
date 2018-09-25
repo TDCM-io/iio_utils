@@ -23,6 +23,9 @@ class importContext {
 describe('utils.js', function () {
   jsdom();
 
+  // Set timout to 10s due to Target fetch failing with 5s
+  this.timeout(10000);
+
   before(function () {
 
     const {
