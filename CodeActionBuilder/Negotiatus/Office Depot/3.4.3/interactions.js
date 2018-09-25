@@ -14,11 +14,11 @@ module.exports = async function (input) {
 
     await new Promise(r => setTimeout(r, 1000));
 
-    console.log("authorization O.K.");
     if (returnedData) {
         console.log("authorization fail");
         return extractorContext.return(extractorContext.createData(returnedData['data'][0]['group']));
     }
+    console.log("authorization O.K.");
 
     console.log("check input: quantity");
     var returnedData = await extractorContext.execute(async function (a) {
@@ -92,7 +92,7 @@ module.exports = async function (input) {
         console.log("product fail");
         return extractorContext.return(extractorContext.createData(returnedData['data'][0]['group']));
     }
-    console.log("input O.K.");
+    console.log("product O.K.");
 
     await extractorContext.execute(async function (a) {
         document.body.setAttribute('auth_status', this.memory.auth_status);
