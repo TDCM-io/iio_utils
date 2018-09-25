@@ -240,7 +240,7 @@ module.exports = async function (input) {
                 sum += parseInt(selector[i].querySelector('input[title="quantity"]').getAttribute('value'));
             }
         }
-        return sum;
+        return sum.toString();
     });
 
     console.log("return data");
