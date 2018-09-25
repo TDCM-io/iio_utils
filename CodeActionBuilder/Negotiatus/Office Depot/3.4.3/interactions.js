@@ -2,7 +2,7 @@ module.exports = async function (input) {
     console.log('Interactions');
     console.log("check authorization");
     var returnedData = await extractorContext.execute(async function (a) {
-        const utils = new window.__Utils(this, "NEG 3.1.1.");
+        const utils = new window.__Utils(this, "NEG 3.4.3.");
         if (this.memory.auth_status != "SUCCESS") {
             if (this.memory.auth_status === "UNKNOWN") {
                 return utils.endEx('AUTH_UNKNOWN', 'BLANK_FAILURE');
@@ -14,11 +14,11 @@ module.exports = async function (input) {
 
     await new Promise(r => setTimeout(r, 1000));
 
-    console.log("authorization O.K.");
     if (returnedData) {
         console.log("authorization fail");
         return extractorContext.return(extractorContext.createData(returnedData['data'][0]['group']));
     }
+    console.log("authorization O.K.");
 
     console.log("check input: quantity");
     var returnedData = await extractorContext.execute(async function (a) {
@@ -92,7 +92,7 @@ module.exports = async function (input) {
         console.log("product fail");
         return extractorContext.return(extractorContext.createData(returnedData['data'][0]['group']));
     }
-    console.log("input O.K.");
+    console.log("product O.K.");
 
     await extractorContext.execute(async function (a) {
         document.body.setAttribute('auth_status', this.memory.auth_status);
@@ -240,7 +240,7 @@ module.exports = async function (input) {
                 sum += parseInt(selector[i].querySelector('input[title="quantity"]').getAttribute('value'));
             }
         }
-        return sum;
+        return sum.toString();
     });
 
     console.log("return data");

@@ -1,0 +1,9 @@
+{
+    "siteUrl": "https://business.officedepot.com/",
+    "gotoActionOptions": {
+        "externalScripts": [
+            "https://tdcmioiio.herokuapp.com/utils.js",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        ]
+    }
+}
