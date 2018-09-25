@@ -44,17 +44,19 @@ module.exports = async function (input) {
 
   console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    err = document.querySelectorAll('.error');
-    if (err) {
-      if(err.length > 1){
-        return err[0].innerText + " " + err[1].innerText;
-      }
-      else{
-        return err.innerText;
-      }
-    }
-    else if(document.querySelectorAll('.block-copy')){
+    if(document.querySelectorAll('.block-copy')){
       return document.querySelectorAll('.block-copy').innerText;
+    }
+    else{
+      err = document.querySelectorAll('#loginForm .error');
+      if(err){
+        if(err.length > 1){
+          return err[0].innerText + " " + err[1].innerText;
+        }
+        else{
+          return err.innerText;
+        }
+      }
     }
     return null;
   });

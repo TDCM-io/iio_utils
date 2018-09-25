@@ -27,57 +27,57 @@ module.exports = async function (input) {
 
     console.log('count items in cart and build data table');
     var buttonsCount = await extractorContext.execute(async function (a) {
-        var products = new Array(), sortedProducts, quantity = new Array();
-        if(document.querySelector('tr[id*="cartItem"]')){
+        var products = new Array(), sortedProducts = new Array(), quantity = new Array();
+        if (document.querySelector('tr[id*="cartItem"]')) {
             var selector = document.querySelectorAll('tr[id*="cartItem"]')
-            
-            for(var i = 0; i < selector.length; i++){
+
+            for (var i = 0; i < selector.length; i++) {
                 products.push(selector[i].querySelector('.cart-item-description-details .cart-item-description-name').innerText);
             }
-            
-            sortedProducts = products.filter(function(item, pos, self) {
+
+            sortedProducts = products.filter(function (item, pos, self) {
                 return self.indexOf(item) == pos;
             })
-            
-            for(var i = 0; i < sortedProducts.length; i++){
+
+            for (var i = 0; i < sortedProducts.length; i++) {
                 var sum = 0;
-                    for(var j = 0; j < selector.length; j++){
-                        if(selector[j].querySelector('.cart-item-description-details .cart-item-description-name').innerText === sortedProducts[i]){
-                            sum += parseInt(selector[j].querySelector('.qty-input-group input').getAttribute('value'));
-                        }
+                for (var j = 0; j < selector.length; j++) {
+                    if (selector[j].querySelector('.cart-item-description-details .cart-item-description-name').innerText === sortedProducts[i]) {
+                        sum += parseInt(selector[j].querySelector('.qty-input-group input').getAttribute('value'));
                     }
+                }
                 quantity.push(sum.toString());
             }
+
+            let body = document.body,
+                tbl = document.createElement('table');
+            tbl.setAttribute("id", "tblCartHistory");
+            let tblBody = document.createElement("tbody");
+
+            for (var i = 0; i < sortedProducts.length; i++) {
+                let tr = document.createElement('tr');
+
+                let td = document.createElement('td');
+                td.setAttribute('id', 'productName');
+                td.appendChild(document.createTextNode(sortedProducts[i]));
+                tr.appendChild(td);
+
+                let td2 = document.createElement('td');
+                td2.setAttribute('id', 'quantity');
+                td2.appendChild(document.createTextNode(quantity[i]));
+                tr.appendChild(td2);
+
+                tblBody.appendChild(tr);
+            }
+            tbl.appendChild(tblBody);
+            body.appendChild(tbl);
         }
-
-        let body = document.body, tbl  = document.createElement('table');
-        tbl.setAttribute("id", "tblCartHistory");
-        let tblBody = document.createElement("tbody");
-
-        for(var i = 0; i < sortedProducts.length; i++){
-            let tr = document.createElement('tr');
-            
-            let td = document.createElement('td');
-            td.setAttribute('id', 'productName');
-            td.appendChild(document.createTextNode(sortedProducts[i]));
-            tr.appendChild(td);
-            
-            let td2 = document.createElement('td');
-            td.setAttribute('id', 'quantity');
-            td2.appendChild(document.createTextNode(quantity[i]));
-            tr.appendChild(td2);
-            
-            tblBody.appendChild(tr);
-          }
-          tbl.appendChild(tblBody);
-          body.appendChild(tbl);
-
-          return products.length;
+        return products.length;
     });
     console.log('O.K.');
 
     console.log('check for remove buttons');
-    if(!buttonsCount){
+    if (!buttonsCount) {
         const utils = new window.__Utils(this, "NEG 3.4.1.");
         return utils.endEx('AUTH_SUCCESS', 'EMPTY_CART');
     }
@@ -91,60 +91,59 @@ module.exports = async function (input) {
     });
     console.log("create runtimeConfig");
     const runtimeConfig = {
-        "fields": [
-            {
+        "fields": [{
                 "id": "00804369-b153-4462-aae7-c97218aa3ab8",
                 "name": "auth_status",
                 "type": "AUTO",
                 "xpath": "//body/@auth_status",
                 "defaultValue": " ",
                 "ranking": 0
-              },
-              {
+            },
+            {
                 "id": "c8fde873-faf5-4053-bfac-0f38f85abd3a",
                 "name": "auth_message",
                 "type": "AUTO",
                 "xpath": "//body/@auth_message",
                 "defaultValue": " ",
                 "ranking": 0
-              },
-              {
+            },
+            {
                 "id": "f48c487d-f2b8-4933-8830-5bef4f3fc3ef",
                 "name": "status",
                 "type": "AUTO",
                 "xpath": "//body/@status",
                 "defaultValue": " ",
                 "ranking": 0
-              },
-              {
+            },
+            {
                 "id": "22c8f26c-41dc-47aa-bb90-1cc502de8782",
                 "name": "message",
                 "type": "AUTO",
                 "xpath": "//body/@message",
                 "defaultValue": " ",
                 "ranking": 0
-              },
-              {
+            },
+            {
                 "id": "90ff816c-f2a2-48f5-87bc-f6d4910c57c8",
                 "name": "product",
                 "type": "AUTO",
-                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//*[id=\"#productName\"]",
+                "xpath": "//table[@id=\"tblCartHistory\"]//*[@id=\"productName\"]",
                 "defaultValue": " ",
                 "ranking": 0
-              },
-              {
+            },
+            {
                 "id": "92828a58-03e0-4e11-b5b9-c86987687024",
                 "name": "quantity",
                 "type": "AUTO",
-                "xpath": "//*[@id=\"tblCartHistory\"]/tbody//*[id=\"#quantity\"]",
+                "xpath": "//table[@id=\"tblCartHistory\"]//*[@id=\"quantity\"]",
                 "defaultValue": "0",
                 "ranking": 0
-              }
+            }
         ],
         "singleRecord": true,
         "noscript": true,
         "screenCapture": false
-      }
+    }
     console.log("O.K.");
 
     console.log("extract data");
@@ -152,7 +151,7 @@ module.exports = async function (input) {
     console.log("O.K.");
 
     console.log("remove cart items");
-    for(var i = 0; i < buttonsCount; i++){
+    for (var i = 0; i < buttonsCount; i++) {
         await extractorContext.click('tr[id*="cartItem"] input[title="Remove"]');
         await new Promise(r => setTimeout(r, 2000));
     }
