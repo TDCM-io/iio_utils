@@ -80,7 +80,7 @@ module.exports = async function (input) {
       auth_status: 'UNKNOWN',
       auth_message: ' '
     });
-    return;
+    return extractorContext.reportBlocked(result.code, 'Incorrect status code');
   }
   console.log("login passed");
   extractorContext.setMemory({
