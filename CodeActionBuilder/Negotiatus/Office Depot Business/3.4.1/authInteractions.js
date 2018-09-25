@@ -44,17 +44,19 @@ module.exports = async function (input) {
 
   console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    err = document.querySelectorAll('.error');
-    if (err) {
-      if(err.length > 1){
-        return err[0].innerText + " " + err[1].innerText;
-      }
-      else{
-        return err.innerText;
-      }
+    if(document.querySelector('.block-copy')){
+      return document.querySelector('.block-copy').innerText;
     }
-    else if(document.querySelectorAll('.block-copy')){
-      return document.querySelectorAll('.block-copy').innerText;
+    else{
+      err = document.querySelectorAll('#loginForm .error');
+      if(err){
+        if(err.length > 1){
+          return err[0].innerText + ". " + err[1].innerText;
+        }
+        else{
+          return err[0].innerText;
+        }
+      }
     }
     return null;
   });
@@ -80,7 +82,7 @@ module.exports = async function (input) {
       auth_status: 'UNKNOWN',
       auth_message: ' '
     });
-    return;
+    return extractorContext.reportBlocked(result.code, 'Incorrect status code');
   }
   console.log("login passed");
   extractorContext.setMemory({
