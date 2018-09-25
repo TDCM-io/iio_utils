@@ -44,14 +44,14 @@ module.exports = async function (input) {
 
   console.log('check for errors');
   let error = await extractorContext.execute(function () {
-    if(document.querySelectorAll('.block-copy')){
-      return document.querySelectorAll('.block-copy').innerText;
+    if(document.querySelector('.block-copy')){
+      return document.querySelector('.block-copy').innerText;
     }
     else{
       err = document.querySelectorAll('#loginForm .error');
       if(err){
         if(err.length > 1){
-          return err[0].innerText + " " + err[1].innerText;
+          return err[0].innerText + ". " + err[1].innerText;
         }
         else{
           return err.innerText;
