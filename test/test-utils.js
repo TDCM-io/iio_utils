@@ -96,6 +96,13 @@ describe('utils.js', function () {
       auth_message: 'Failure message'
     });
 
+    utils = new window.__Utils(new importContext(), 'NEG 3.1.1');
+    // test missing dot in columns' name
+    expect(utils.endEx(null, null, 'Failure message')).to.deep.equal({
+      auth_status: "FAILURE",
+      auth_message: 'Failure message'
+    });
+
     utils = new window.__Utils(new importContext());
     // return only auth message
     expect(utils.endEx('AUTH_UNKNOWN', null)).to.deep.equal({
